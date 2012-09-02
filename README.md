@@ -3,7 +3,7 @@ Philip - a PHP IRC bot framework
 
 Philip is a [Slim](http://slimframework.com/)-inspired framwork for creating simple IRC bots.
 It was written by [Bill Israel](http://billisrael.info/). The purpose of the project is to
-allow people to create fun, simple IRC bots with a minimal amount of overhead.
+allow people to create fun, simple IRC bots with minimal overhead or complexity.
 
 
 Requirements
@@ -59,6 +59,8 @@ $config = array(
     "nick"       => "examplebot",
     "channels"   => array( '#example-channel' ),
     "admins"     => array( 'example' ),
+    "debug"      => true,
+    "log"        => __DIR__ . '/bot.log',
 );
 
 $bot = new Philip($config);
@@ -242,3 +244,15 @@ NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+_This license is also included in the `LICENSE` file._
+
+Author
+------
+
+Bill Israel - [bill.israel@gmail.com](mailto:bill.israel@gmail.com) - [http://twitter.com/epochblue](http://twitter.com/epochblue)
+
+Acknowledgements
+----------------
+
+Philip was heavily inspired by the [Slim framework](http://slimframework.com) and
+[Isaac IRC DSL](https://github.com/vangberg/isaac) projects.
