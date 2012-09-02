@@ -5,6 +5,10 @@ namespace Philip;
 use Philip\Action,
     Philip\IRC\Request,
     Philip\IRC\Response;
+use Monolog\Logger,
+    Monolog\Formatter\LineFormatter,
+    Monolog\Handler\StreamHandler,
+    Monolog\Handler\NullHandler;
 
 /**
  * A Slim-inspired IRC bot.
@@ -21,6 +25,9 @@ class Philip
 
     /** @var array $events Events and their handlers */
     private $events;
+
+    /** @var Logger $log The log to write to, if debug is enabled */
+    private $log;
 
     /**
      * Constructor.
@@ -40,6 +47,7 @@ class Philip
             'notice'   => array(),
         );
 
+        $this->setupLogger();
         $this->addDefaultHandlers();
     }
 
@@ -136,6 +144,16 @@ class Philip
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * Returns the logger, in case any handlers need to log.
+     *
+     * @return Logger An instance of a Monolog logger
+     */
+    public function getLogger()
+    {
+        return $this->log;
     }
 
     /**
@@ -287,7 +305,7 @@ class Philip
      */
     private function receive($raw)
     {
-        fwrite(STDOUT, '--> ' . $raw);
+        $this->log->debug('--> ' . $raw);
         return new Request($raw);
     }
 
@@ -303,8 +321,9 @@ class Philip
         }
 
         foreach ($responses as $response) {
-            fwrite($this->socket, ($response . "\r\n"));
-            fwrite(STDOUT, '<-- ' . $response . PHP_EOL);
+            $response .= "\r\n";
+            fwrite($this->socket, $response);
+            $this->log->debug('<-- ' . $response);
         }
     }
 
@@ -319,11 +338,38 @@ class Philip
         });
 
         // If an Error message is encountered, just log it for now.
-        $errorAction = new Action(null, function($request, $params) {
-            fwrite(STDOUT, "ERROR: {$request->getMessage()}" . PHP_EOL);
+        $log = $this->log;
+        $errorAction = new Action(null, function($request, $params) use ($log) {
+            $log->debug("ERROR: {$request->getMessage()}");
         });
 
         $this->onEvent('ping', $pingAction);
         $this->onEvent('error', $errorAction);
+    }
+
+    /**
+     * Sets up the logger, but only if debug is enabled.
+     */
+    private function setupLogger()
+    {
+        $this->log = new Logger('philip');
+        if (isset($this->config['debug']) && $this->config['debug'] == true) {
+            $log_path = isset($this->config['log']) ? $this->config['log'] : false;
+
+            if (!$log_path) {
+                throw new \Exception("If debug is enabled, you must supply a log file location.");
+            }
+
+            try {
+                $format = "[%datetime% - %level_name%]: %message%";
+                $handler = new StreamHandler($log_path, Logger::DEBUG);
+                $handler->setFormatter(new LineFormatter($format));
+                $this->log->pushHandler($handler);
+            } catch (\Exception $e) {
+                throw \Exception("Unable to open/read log file.");
+            }
+        } else {
+            $this->log->pushHandler(new NullHandler());
+        }
     }
 }
