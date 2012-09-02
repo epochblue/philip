@@ -13,9 +13,12 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0"
+        "php": ">=5.3.0",
+        "monolog/monolog": "1.2.*"
     },
     "autoload": {
-        "psr-0": {"Philip": "src/"}
+        "psr-0": {
+            "Philip": "src/"
+        }
     }
 }
