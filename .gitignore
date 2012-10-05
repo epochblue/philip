@@ -1,6 +1,7 @@
 # misc junk files
 .DS_Store
 *.swp
+.idea
 
 # Ignore composer files
 composer.phar
