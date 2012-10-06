@@ -1,7 +1,9 @@
-# misc junk files
+# Miscellaneous Ignores
 .DS_Store
 *.swp
 .idea
+
+# Ignore Test Runners and Logs
 test-bot.*
 
 # Ignore composer files
