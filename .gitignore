@@ -2,6 +2,7 @@
 .DS_Store
 *.swp
 .idea
+test-bot.*
 
 # Ignore composer files
 composer.phar
