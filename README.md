@@ -9,7 +9,7 @@ allow people to create fun, simple IRC bots with minimal overhead or complexity.
 Requirements
 ------------
 
- * PHP 5.3.0+
+ * PHP 5.3.3+
  * [Composer](http://getcomposer.org/)
 
 
@@ -65,9 +65,9 @@ $config = array(
 
 $bot = new Philip($config);
 
-$bot->onChannel('/^!echo (.*)$/', function($request, $matches) {
-    $echo = trim($matches[0]);
-    return Response::msg($request->getSource(), $echo);
+$bot->onChannel('/^!echo (.*)$/', function($event) {
+    $matches = $event->getMatches();
+    $event->addResponse(Response::msg($event->getRequest()->getSource(), trim($matches[0])));
 });
 
 $bot->run();
@@ -79,8 +79,8 @@ Save your file, and start your bot:
 $> php examplebot.php
 ```
 
-And that's all there is to it! Your bot will connect to the IRC server, join the channels you've
-wanted, and start listening for any commands you've specified. For more information about
+And that's all there is to it! Your bot will connect to the IRC server and join the channels you've
+specified. Then it'll start listening for any commands you've created. For more information about
 Philip's API, please see the API section below.
 
 
@@ -91,23 +91,35 @@ Philip's API is simple and similar to JavaScript's "on*" event system. You add f
 to your bot by telling it how to respond to certain events. Events include things like channel
 messages, private messages, users joining a channel, users leaving a channel, etc.
 
-To determine whether your bot should respond to a given event, you will supply a regular expression
-that Philip will test against. If the regex matches, then Philip will execute the callback function
-you provide. Putting it all together, the basic API for Philip follows this pattern:
+There are two kinds of events in Philip: server events and message events. The only real difference
+between the two is that you can tell Philip to conditionally respond to message events. Since your
+bot will always respond to server events, the API for those is simpler:
 
 ```php
-$bot->on<Event>(<regex pattern>, <callback function>)
+$bot->on<Event>(<callback function>);
 ```
 
-Possible values for &lt;Event&gt; include `Channel`, `PrivateMessage`, `Message`, `Join`, `Part` `Error`,
-and `Notice`.
+Possible values for &lt;Event&gt; in this case are: `Join`, `Part`, `Error`, and `Notice`.
+
+For message events, to determine whether your bot should respond to a given event,
+you will supply a regular expression that Philip will test against. If the regex matches,
+then Philip will execute the callback function you provide. The API for message events is:
+
+```php
+$bot->on<Event>(<regex pattern>, <callback function>);
+```
+
+Possible values for &lt;Event&gt; include `Channel`, `PrivateMessage`, and `Message`.
 
 #### Event Examples:
 
 ```php
+// Message Events
 $bot->onChannel()           // listens only to channel messages
 $bot->onPrivateMessage()    // listens only to private messages
 $bot->onMessage()           // listens to both channel messages and private messages
+
+// Server Events
 $bot->onJoin()              // listens only for people joining channels
 $bot->onPart()              // listens only for people leaving channels
 $bot->onError()             // listens only for IRC ERROR messages
@@ -115,41 +127,53 @@ $bot->onNotice()            // listens only for IRC NOTICE messages
 ```
 
 The `<regex pattern>` is a standard PHP regular expression. If `null` is passed instead of a
-regular expression, the callback function will be executed for all messages of that event type.
-If any match groups are specified in the regular expression, they will be passed to the callback function.
+regular expression, the callback function will always be executed for that event type.
+If any match groups are specified in the regular expression, they will be passed to the callback function
+through the event.
 
 If your regular expression is successfully matched, Philip will execute the callback function you provide,
 allowing you to respond to the message. The `<callback function>` is an anonymous function that accepts
-two parameters: `$request` and `$matches`.
+one parameter: `$event`.
 
-`$request` is an instance of `Philip\IRC\Request` (which is a simple wrapper over a raw IRC message).
-`$matches` is an array of any matches found for match groups specified by the <regex pattern>.
+`$event` is an instance of `Philip\IRC\Event` (which is a simple wrapper over an IRC "event"). The
+main functions in the public API for a Philip Event re:
 
-There are no strong requirements around what a `<callback function>` must return. However, if you
-wish to send a message back to the IRC server, the function must return a `Philip\IRC\Response`.
+```php
+$event->getRequest()        // Returns a Philip Request object
+$event->getMathces()        // Returns an array of any matches found for match
+                               groups specified by the <regex pattern>.
+$event->addResponse()       // Adds a response to the list of responses for the event.
+```
+
+There is no captured return value for the callback function. However, if you
+wish to send a message back to the IRC server, your callback function can add a response to
+the list of responses by using the `addResponse()` method on the `Event` object. The `addResponse()`
+method expects its only parameter to be an instance of a Philip Response object.
+
 Putting all this together, let's look an example of adding `echo` functionality to Philip:
 
 ### Example:
 
 ```php
-$bot->onChannel('/^!echo (.*)$/', function($request, $matches) {
-    $echo = trim($matches[0]);
-    return Response::msg($request->getSource(), $echo);
+$bot->onChannel('/^!echo (.*)$/', function($event) {
+    $matches = $event->getMatches();
+    $event->addResponse(Response::msg($request->getSource(), trim($matches[0])));
 });
 ```
 
 In this example, the bot will listen for channel messages that begin with `!echo` and are followed
 by anything else. The "anything else" is captured in a match group and passed to the callback
-function. The callback function simply returns the match to the channel that originall received
-the message.
+function. The callback function simply adds a response to the event that send the matching message
+back to the channel that originally received the message.
+
 
 #### Methods of note in the `Philip\IRC\Request` object:
 
 ```php
-$request->getSendingUser()      // get the nick of the user sending a message
-$request->getSource()           // get the channel of the sent message,
+$request->getSendingUser()      // Get the nick of the user sending a message
+$request->getSource()           // Get the channel of the sent message,
                                 // or nick if it was a private message
-$request->getMessage()          // get the text of a message for channel/private messages
+$request->getMessage()          // Get the text of a message for channel/private messages
 ```
 
 
@@ -216,8 +240,11 @@ class HelloPlugin
      */
     public funciton init()
     {
-        $this->bot->onChannel('/^hello$/', function($request, $matches) {
-            return Response::msg($request-getSource(), "Hi, {$request->getSendingUser()}!");
+        $this->bot->onChannel('/^hello$/', function($event) {
+            $request = $event->getRequest();
+            $event->addResponse(
+                Response::msg($request->getSource(), "Hi, {$request->getSendingUser()}!")
+            );
         });
     }
 }
