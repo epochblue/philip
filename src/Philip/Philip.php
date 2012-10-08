@@ -319,7 +319,7 @@ class Philip
     {
         // When the server PINGs us, just respond with PONG and the server's host
         $pingHandler = new EventListener(null, function($event) {
-            return Response::pong($event->getRequest()->getMessage());
+            $event->addResponse(Response::pong($event->getRequest()->getMessage()));
         });
 
         // If an Error message is encountered, just log it for now.
