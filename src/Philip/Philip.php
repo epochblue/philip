@@ -160,36 +160,33 @@ class Philip
     /**
      * Loads a plugin. See the README for plugin documentation.
      *
-     * @param string $name The name of the plugin to load
+     * @param string $name The fully-qualified classname of the plugin to load
      */
-    public function loadPlugin($name)
+    public function loadPlugin($classname)
     {
-        $plugin_class = $name . 'Plugin';
-        $path = 'plugins/' . $plugin_class . '.php';
-        if (file_exists($path)) {
-            require($path);
+        if (class_exists($classname)
+            && $plugin = new $classname($this)
+            and $plugin instanceof \Philip\AbstractPlugin
+        ) {
+            $plugin->init();
         }
-
-        $n = "\\" . $plugin_class;
-        $plugin = new $n($this);
-        $plugin->init();
     }
 
     /**
      * Loads multiple plugins in a single call.
      *
-     * @param array $names The names of the plugins to load.
+     * @param array $names The fully-qualified classnames of the plugins to load.
      */
-    public function loadPlugins($names)
+    public function loadPlugins($classnames)
     {
-        foreach ($names as $name) {
-            $this->loadPlugin($name);
+        foreach ($classnames as $classname) {
+            $this->loadPlugin($classname);
         }
     }
 
     /**
      * Determines if the given user is an admin.
-     * 
+     *
      * @param string $user The username to test
      * @return boolean True if the user is an admin, false otherwise
      */
@@ -280,7 +277,7 @@ class Philip
                 }
             }
         } while (!feof($this->socket));
-    } 
+    }
 
     /**
      * Convert the raw incoming IRC message into a Request object

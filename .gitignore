@@ -2,9 +2,11 @@
 .DS_Store
 *.swp
 .idea
+*.iml
 
 # Ignore Test Runners and Logs
 test-bot.*
+TestPlugin.*
 
 # Ignore composer files
 composer.phar
