@@ -21,7 +21,7 @@ abstract class AbstractPlugin
     /**
      * @var Philip
      */
-    protected $_bot;
+    protected $bot;
 
     /**
      * Constructor
@@ -30,7 +30,7 @@ abstract class AbstractPlugin
      */
     public function __construct(Philip $bot)
     {
-        $this->_bot = $bot;
+        $this->bot = $bot;
     }
 
     /**
