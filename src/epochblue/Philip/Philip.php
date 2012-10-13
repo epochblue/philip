@@ -1,11 +1,11 @@
 <?php
 
-namespace Philip;
+namespace Epochblue\Philip;
 
-use Philip\EventListener;
-use Philip\IRC\Event;
-use Philip\IRC\Request;
-use Philip\IRC\Response;
+use Epochblue\Philip\EventListener;
+use Epochblue\Philip\IRC\Event;
+use Epochblue\Philip\IRC\Request;
+use Epochblue\Philip\IRC\Response;
 use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
@@ -161,13 +161,16 @@ class Philip
      * Loads a plugin. See the README for plugin documentation.
      *
      * @param string $name The fully-qualified classname of the plugin to load
+     *
+     * @throws \InvalidArgumentException
      */
     public function loadPlugin($classname)
     {
-        if (class_exists($classname)
-            && $plugin = new $classname($this)
-            and $plugin instanceof \Philip\AbstractPlugin
-        ) {
+        if (class_exists($classname) && $plugin = new $classname($this)) {
+            if (!$plugin instanceof AbstractPlugin) {
+                throw new \InvalidArgumentException('Class must be an instance of \Phlip\Plugin\AbstractPlugin');
+            }
+
             $plugin->init();
         }
     }

@@ -7,8 +7,7 @@
  * @package    philip
  * @copyright  2012 iostudio. LLC
  */
-
-namespace Philip;
+namespace Epochblue\Philip;
 
 /**
  * Philip Plugin Abstract

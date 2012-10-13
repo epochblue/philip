@@ -1,6 +1,6 @@
 <?php
 
-namespace Philip;
+namespace Epochblue\Philip;
 
 use Symfony\Component\EventDispatcher\Event;
 

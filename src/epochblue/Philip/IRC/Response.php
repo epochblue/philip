@@ -1,6 +1,6 @@
 <?php
 
-namespace Philip\IRC;
+namespace Epochblue\Philip\IRC;
 
 /**
  * A simplified representation of an IRC response object.

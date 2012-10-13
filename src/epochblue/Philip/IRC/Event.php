@@ -1,6 +1,6 @@
 <?php
 
-namespace Philip\IRC;
+namespace Epochblue\Philip\IRC;
 
 use Symfony\Component\EventDispatcher\Event as BaseEvent;
 
@@ -11,7 +11,7 @@ use Symfony\Component\EventDispatcher\Event as BaseEvent;
  */
 class Event extends BaseEvent
 {
-    /** @var \Philip\IRC\Request $request The request object for this event */
+    /** @var Epochblue\Philip\IRC\Request $request The request object for this event */
     private $request;
 
     /** @var array $responses Array of responses for the event */
@@ -53,7 +53,7 @@ class Event extends BaseEvent
     /**
      * Get the request.
      *
-     * @return \Philip\IRC\Request
+     * @return Epochblue\Philip\IRC\Request
      */
     public function getRequest()
     {
