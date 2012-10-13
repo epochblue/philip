@@ -192,53 +192,43 @@ Philip supports a basic plugin system, and adding a plugin to your bot is simple
 
 ### Using a plugin
 
-Using a plugin is simple. In your bot's project directory, create a `plugins` directory, and place the
-plugin files in it. In the file for your bot, load the plugins by calling either `loadPlugin(<name>)`
-(to load them one at a time), or `loadPlugins(array())` (to load multiple plugins at once). A plugin's
-"name" is considered to be the plugin's class name without the word "Plugin".
+Using a plugin is simple. Plugins should be Composer-able, so start by include the plugins via Composer.
+Once you've run `composer update` and your plugins are available in your bot, you can load the plugins by
+calling either `loadPlugin(<name>)` (to load them one at a time), or `loadPlugins(array())`
+(to load multiple plugins at once).
 
-For example, if you had a HelloPlugin installed, you can do load it with either of the following:
+For example, if you had a plugin whose full, namespaced classname was \Example\Philip\Plugin\HelloPlugin,
+you can do load it in your both with either of the following:
 
 ```php
-$bot->loadPlugin('Hello');
-$bot->loadPlugins(array('Hello'));
+$bot->loadPlugin('Example\\Philip\\HelloPlugin');
+$bot->loadPlugins(array(
+    'Example\\Philip\\HelloPlugin',
+));
 ```
 
 Additionally, if you'd like to turn some of your bot's functionality into a plugin, that's easy as well.
 
 ### Writing a plugin
 
-To create a plugin, you must follow a few simple conventions, but beyond that, there's very little to them.
-A Plugin is little more than a specially-named file containing a single namespace-less plain-old-PHP-object
-that has, at minimum, two methds:
-
-* a constructor that accepts an instance of a Philip bot as a paramter, and 
-* an `init()` method for setting up the plugin functionality
-    
-Your plugin should be named like `XXXPlugin`, where XXX is the "name" of your plugin.
-Below is an example of a simple plugin:
+Creating a plugin is simple. A plugin must extend the `Epochblue\Philip\AbstractPlugin` class and must provide
+and implementation for an `init()` method. And that's it. Your plugin can be named anything, however, by
+convention most Philip plugins are named like `<xxx>Plugin` Below is an example of a simple plugin:
 
 ```php
-// HelloPlugin.php
+// .../Example/Philip/Plugin/HelloPlugin.php
 <?php
 
-class HelloPlugin
+namespace Example\Philip\Plugin;
+
+use Epochblue\Philip\AbstractPlugin as BasePlugin;
+
+class HelloPlugin extends BasePlugin
 {
-    /** @var Philip $bot The instance of the bot to add functionality to */
-    private $bot;
-
-    /**
-     * Constructor, with injected $bot dependency
-     */
-    public function __constructor($bot)
-    {
-        $this->bot = $bot;
-    }
-
     /**
      * Does the 'heavy lifting' of initializing the plugin's behavior
      */
-    public funciton init()
+    public function init()
     {
         $this->bot->onChannel('/^hello$/', function($event) {
             $request = $event->getRequest();
