@@ -266,7 +266,12 @@ _This license is also included in the `LICENSE` file._
 Author
 ------
 
-Bill Israel - [bill.israel@gmail.com](mailto:bill.israel@gmail.com) - [http://twitter.com/epochblue](http://twitter.com/epochblue)
+Bill Israel - [https://github.com/epochblue](https://github.com/epochblue) - [http://twitter.com/epochblue](http://twitter.com/epochblue)
+
+Contributors
+------------
+
+Doug Hurst - [https://github.com/dalanhurst](https://github.com/dalanhurst)- [http://twitter.com/dalanhurst](http://twitter.com/dalanhurst)
 
 Acknowledgements
 ----------------
