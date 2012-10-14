@@ -7,7 +7,7 @@
  * @package    philip
  * @copyright  2012 iostudio. LLC
  */
-namespace Epochblue\Philip;
+namespace Philip;
 
 /**
  * Philip Plugin Abstract
@@ -19,14 +19,14 @@ namespace Epochblue\Philip;
 abstract class AbstractPlugin
 {
     /**
-     * @var Philip
+     * @var \Philip\Philip
      */
     protected $bot;
 
     /**
      * Constructor
      *
-     * @param Philip $bot
+     * @param \Philip\Philip $bot
      */
     public function __construct(Philip $bot)
     {

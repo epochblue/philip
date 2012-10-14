@@ -1,6 +1,6 @@
 <?php
 
-namespace Epochblue\Philip\IRC;
+namespace Philip\IRC;
 
 /**
  * A representation of an IRC request message.
@@ -170,7 +170,7 @@ class Request
 	 *
 	 * @return bool True if the request was from a server, false otherwise
 	 */
-    public function isFromSever()
+    public function isFromServer()
     {
 		return !$this->isFromUser();
 	}

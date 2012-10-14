@@ -1,11 +1,11 @@
 <?php
 
-namespace Epochblue\Philip;
+namespace Philip;
 
-use Epochblue\Philip\EventListener;
-use Epochblue\Philip\IRC\Event;
-use Epochblue\Philip\IRC\Request;
-use Epochblue\Philip\IRC\Response;
+use Philip\EventListener;
+use Philip\IRC\Event;
+use Philip\IRC\Request;
+use Philip\IRC\Response;
 use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;

@@ -211,17 +211,17 @@ Additionally, if you'd like to turn some of your bot's functionality into a plug
 
 ### Writing a plugin
 
-Creating a plugin is simple. A plugin must extend the `Epochblue\Philip\AbstractPlugin` class and must provide
+Creating a plugin is simple. A plugin must extend the `Philip\AbstractPlugin` class and must provide
 and implementation for an `init()` method. And that's it. Your plugin can be named anything, however, by
 convention most Philip plugins are named like `<xxx>Plugin` Below is an example of a simple plugin:
 
 ```php
-// .../Example/Philip/Plugin/HelloPlugin.php
+// .../Example/PhilipPlugin/HelloPlugin.php
 <?php
 
-namespace Example\Philip\Plugin;
+namespace Example\PhilipPlugin;
 
-use Epochblue\Philip\AbstractPlugin as BasePlugin;
+use Philip\AbstractPlugin as BasePlugin;
 
 class HelloPlugin extends BasePlugin
 {
