@@ -168,7 +168,7 @@ class Philip
     {
         if (class_exists($classname) && $plugin = new $classname($this)) {
             if (!$plugin instanceof AbstractPlugin) {
-                throw new \InvalidArgumentException('Class must be an instance of \Phlip\Plugin\AbstractPlugin');
+                throw new \InvalidArgumentException('Class must be an instance of \Philip\AbstractPlugin');
             }
 
             $plugin->init();
