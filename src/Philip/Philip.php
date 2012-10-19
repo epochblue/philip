@@ -42,19 +42,40 @@ class Philip
         $this->dispatcher = new EventDispatcher();
 
         $this->setupLogger();
+        $this->setupPidfile();
         $this->addDefaultHandlers();
     }
 
     /**
      * Destructor; ensure the socket gets closed.
+     * Destroys pid file if set in config.
      */
     public function __destruct()
     {
         if (isset($this->socket)) {
             fclose($this->socket);
         }
+
+        if(isset($this->config['pid']))
+        {
+          unlink($this->config['pid']);
+        }
     }
 
+
+    /**
+     * Creates a pid file if 'pid' is set in configuration
+     */
+    public function setupPidfile()
+    {
+        if(isset($this->config['pid']))
+        {
+            $pidfile = fopen($this->config['pid'], 'w') or die("can't open file");
+            fwrite($pidfile, getmypid());
+            fclose($pidfile);
+        }
+        
+    }
 
     /**
      * Adds an event handler to the list for when someone talks in a channel.
