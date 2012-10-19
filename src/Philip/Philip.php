@@ -372,19 +372,26 @@ class Philip
 
     /**
      * If Philip is configured to write a pid file, open it, and write the pid into it.
+     *
+     * @throws \Exception If Philip is configured to write a pidfile, and
+     *                    there's no 'pidfile' location in the configuration
+     * @throws \Exception If Philip is unable to open the pidfile for writing
      */
     private function writePidfile()
     {
         if (isset($this->config['write_pidfile']) && $this->config['write_pidfile']) {
-            $this->pidfile = __DIR__ . '/philip.pid';
-
-            if (isset($this->config['pidfile'])) {
-                $this->pidfile = $this->config['pidfile'];
+            if (!isset($this->config['pidfile'])) {
+                throw new \Exception('Please supply a pidfile location.');
             }
 
-            $pidfile = fopen($this->pidfile, 'w') or die("Error: Unable to open file: " . $this->pidfile);
-            fwrite($pidfile, getmypid());
-            fclose($pidfile);
+            $this->pidfile = $this->config['pidfile'];
+
+            if ($pidfile = fopen($this->pidfile, 'w')) {
+                fwrite($pidfile, getmypid());
+                fclose($pidfile);
+            } else {
+                throw new \Exception('Unable to open pidfile for writing.');
+            }
         }
     }
 
