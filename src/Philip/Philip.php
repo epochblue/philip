@@ -31,6 +31,9 @@ class Philip
     /** @var Logger $log The log to write to, if debug is enabled */
     private $log;
 
+    /** @var string $pidfile The location to write to, if write_pidfile is enabled */
+    private $pidfile;
+
     /**
      * Constructor.
      *
@@ -56,9 +59,12 @@ class Philip
             fclose($this->socket);
         }
 
-        if(isset($this->config['pid']))
+       if ( isset($this->config['write_pidfile']) )
         {
-          unlink($this->config['pid']);
+          if ( $this->config['write_pidfile'] === true )
+          {
+            unlink( $this->pidfile );
+          }
         }
     }
 
@@ -68,13 +74,20 @@ class Philip
      */
     public function setupPidfile()
     {
-        if(isset($this->config['pid']))
+        if(isset($this->config['write_pidfile']) && $this->config['write_pidfile'] === true )
         {
-            $pidfile = fopen($this->config['pid'], 'w') or die("can't open file");
+          if( isset($this->config['pidfile']))
+          {
+              $this->pidfile = $this->config['pidfile'];
+          } else {
+              $this->pidfile = sprintf("%s/philip.pid", __DIR__);
+          }
+
+
+            $pidfile = fopen($this->pidfile, 'w') or die("can't open file");
             fwrite($pidfile, getmypid());
             fclose($pidfile);
         }
-        
     }
 
     /**
