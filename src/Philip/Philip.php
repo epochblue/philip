@@ -170,9 +170,9 @@ class Philip
      */
     public function getPidfile()
     {
-        $resource = null;
+        $resource = false;
 
-        if (isset($this->config['write_pidfile']) && $this->config['write_pidfile']) {
+        if (isset($this->pidfile) && is_readable($this->pidfile)) {
             $resource = fopen($this->pidfile, 'r');
         }
 
