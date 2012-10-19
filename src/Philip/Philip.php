@@ -59,12 +59,10 @@ class Philip
             fclose($this->socket);
         }
 
-       if ( isset($this->config['write_pidfile']) )
-        {
-          if ( $this->config['write_pidfile'] === true )
-          {
-            unlink( $this->pidfile );
-          }
+        if ( isset($this->config['write_pidfile']) ) {
+            if ( $this->config['write_pidfile'] === true ) {
+                unlink( $this->pidfile );
+            }
         }
     }
 
@@ -74,19 +72,16 @@ class Philip
      */
     public function setupPidfile()
     {
-        if(isset($this->config['write_pidfile']) && $this->config['write_pidfile'] === true )
-        {
-          if( isset($this->config['pidfile']))
-          {
-              $this->pidfile = $this->config['pidfile'];
-          } else {
-              $this->pidfile = sprintf("%s/philip.pid", __DIR__);
-          }
+        if(isset($this->config['write_pidfile']) && $this->config['write_pidfile'] === true ) {
+            if( isset($this->config['pidfile'])) {
+                $this->pidfile = $this->config['pidfile'];
+            } else {
+                $this->pidfile = sprintf("%s/philip.pid", __DIR__);
+            }
 
-
-            $pidfile = fopen($this->pidfile, 'w') or die("can't open file");
-            fwrite($pidfile, getmypid());
-            fclose($pidfile);
+        $pidfile = fopen($this->pidfile, 'w') or die("can't open file");
+        fwrite($pidfile, getmypid());
+        fclose($pidfile);
         }
     }
 
