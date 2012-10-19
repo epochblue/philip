@@ -164,6 +164,22 @@ class Philip
     }
 
     /**
+     * Returns the location of the pid file.
+     *
+     * @return mixed Read-only file resource, or null if there was an error opening the file
+     */
+    public function getPidfile()
+    {
+        $resource = null;
+
+        if (isset($this->config['write_pidfile']) && $this->config['write_pidfile']) {
+            $resource = fopen($this->pidfile, 'r');
+        }
+
+        return $resource ? $resource : null;
+    }
+
+    /**
      * Loads a plugin. See the README for plugin documentation.
      *
      * @param string $name The fully-qualified classname of the plugin to load
