@@ -31,6 +31,9 @@ class Philip
     /** @var Logger $log The log to write to, if debug is enabled */
     private $log;
 
+    /** @var string $pidfile The location to write to, if write_pidfile is enabled */
+    private $pidfile;
+
     /**
      * Constructor.
      *
@@ -42,19 +45,45 @@ class Philip
         $this->dispatcher = new EventDispatcher();
 
         $this->setupLogger();
+        $this->setupPidfile();
         $this->addDefaultHandlers();
     }
 
     /**
      * Destructor; ensure the socket gets closed.
+     * Destroys pid file if set in config.
      */
     public function __destruct()
     {
         if (isset($this->socket)) {
             fclose($this->socket);
         }
+
+        if ( isset($this->config['write_pidfile']) ) {
+            if ( $this->config['write_pidfile'] === true ) {
+                unlink( $this->pidfile );
+            }
+        }
     }
 
+
+    /**
+     * Creates a pid file if 'pid' is set in configuration
+     */
+    public function setupPidfile()
+    {
+        if(isset($this->config['write_pidfile']) && $this->config['write_pidfile'] === true ) {
+            if( isset($this->config['pidfile'])) {
+                $this->pidfile = $this->config['pidfile'];
+            } else {
+                $this->pidfile = sprintf("%s/philip.pid", __DIR__);
+            }
+
+        $pidfile = fopen($this->pidfile, 'w') or die("can't open file");
+        fwrite($pidfile, getmypid());
+        fclose($pidfile);
+        }
+    }
 
     /**
      * Adds an event handler to the list for when someone talks in a channel.
