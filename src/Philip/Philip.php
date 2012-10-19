@@ -43,10 +43,7 @@ class Philip
     {
         $this->config = $config;
         $this->dispatcher = new EventDispatcher();
-
-        $this->setupLogger();
-        $this->setupPidfile();
-        $this->addDefaultHandlers();
+        $this->initialize();
     }
 
     /**
@@ -59,31 +56,11 @@ class Philip
             fclose($this->socket);
         }
 
-        if ( isset($this->config['write_pidfile']) ) {
-            if ( $this->config['write_pidfile'] === true ) {
-                unlink( $this->pidfile );
-            }
+        if (isset($this->config['write_pidfile']) && $this->config['write_pidfile']) {
+            unlink($this->pidfile);
         }
     }
 
-
-    /**
-     * Creates a pid file if 'pid' is set in configuration
-     */
-    public function setupPidfile()
-    {
-        if(isset($this->config['write_pidfile']) && $this->config['write_pidfile'] === true ) {
-            if( isset($this->config['pidfile'])) {
-                $this->pidfile = $this->config['pidfile'];
-            } else {
-                $this->pidfile = sprintf("%s/philip.pid", __DIR__);
-            }
-
-        $pidfile = fopen($this->pidfile, 'w') or die("can't open file");
-        fwrite($pidfile, getmypid());
-        fclose($pidfile);
-        }
-    }
 
     /**
      * Adds an event handler to the list for when someone talks in a channel.
@@ -342,23 +319,13 @@ class Philip
     }
 
     /**
-     * Loads default event handlers for basic IRC commands.
+     * Do some minor initialization work before construction is complete.
      */
-    private function addDefaultHandlers()
+    private function initialize()
     {
-        // When the server PINGs us, just respond with PONG and the server's host
-        $pingHandler = new EventListener(null, function($event) {
-            $event->addResponse(Response::pong($event->getRequest()->getMessage()));
-        });
-
-        // If an Error message is encountered, just log it for now.
-        $log = $this->log;
-        $errorHandler = new EventListener(null, function($event) use ($log) {
-            $log->debug("ERROR: {$event->getRequest()->getMessage()}");
-        });
-
-        $this->dispatcher->addListener('server.ping', array($pingHandler, 'testAndExecute'));
-        $this->dispatcher->addListener('server.error', array($errorHandler, 'testAndExecute'));
+        $this->setupLogger();
+        $this->writePidfile();
+        $this->addDefaultHandlers();
     }
 
     /**
@@ -385,5 +352,43 @@ class Philip
         } else {
             $this->log->pushHandler(new NullHandler());
         }
+    }
+
+    /**
+     * If Philip is configured to write a pid file, open it, and write the pid into it.
+     */
+    private function writePidfile()
+    {
+        if (isset($this->config['write_pidfile']) && $this->config['write_pidfile']) {
+            $this->pidfile = __DIR__ . '/philip.pid';
+
+            if (isset($this->config['pidfile'])) {
+                $this->pidfile = $this->config['pidfile'];
+            }
+
+            $pidfile = fopen($this->pidfile, 'w') or die("Error: Unable to open file: " . $this->pidfile);
+            fwrite($pidfile, getmypid());
+            fclose($pidfile);
+        }
+    }
+
+    /**
+     * Loads default event handlers for basic IRC commands.
+     */
+    private function addDefaultHandlers()
+    {
+        // When the server PINGs us, just respond with PONG and the server's host
+        $pingHandler = new EventListener(null, function($event) {
+            $event->addResponse(Response::pong($event->getRequest()->getMessage()));
+        });
+
+        // If an Error message is encountered, just log it for now.
+        $log = $this->log;
+        $errorHandler = new EventListener(null, function($event) use ($log) {
+            $log->debug("ERROR: {$event->getRequest()->getMessage()}");
+        });
+
+        $this->dispatcher->addListener('server.ping', array($pingHandler, 'testAndExecute'));
+        $this->dispatcher->addListener('server.error', array($errorHandler, 'testAndExecute'));
     }
 }
