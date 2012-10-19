@@ -40,7 +40,7 @@ $> php composer.phar install -v
 ```
 
 Once this is complete, your directory should have a few new items (a `composer.lock` file, and
-a `vendors` directory) in it, and you shoudl be ready to go. All that's left is to create the
+a `vendors` directory) in it, and you should be ready to go. All that's left is to create the
 the bot. You can name your bot whatever you want, though `bot.php` is nice and easy.
 Here's a basic example:
 
