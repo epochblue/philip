@@ -2,14 +2,14 @@
     "name": "epochblue/philip",
     "description": "A Slim-inspired IRC bot framework",
     "keywords": ["irc", "bot", "dsl"],
-    "homepage": "http://github.com/epochblue/philip",
+    "homepage": "https://github.com/epochblue/philip",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "Bill Israel",
             "email": "bill.israel@gmail.com",
-            "homepage": "http://cubicle17.com/"
+            "homepage": "http://billisrael.info/"
         }
     ],
     "require": {
