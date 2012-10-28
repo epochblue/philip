@@ -5,7 +5,7 @@
  * PHP Version 5.3
  *
  * @package    philip
- * @copyright  2012 iostudio. LLC
+ * @copyright  2012, Bill Israel <bill.israel@gmail.com>
  */
 namespace Philip;
 
