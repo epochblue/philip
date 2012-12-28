@@ -140,7 +140,7 @@ main functions in the public API for a Philip Event re:
 
 ```php
 $event->getRequest()        // Returns a Philip Request object
-$event->getMathces()        // Returns an array of any matches found for match
+$event->getMatches()        // Returns an array of any matches found for match
                                groups specified by the <regex pattern>.
 $event->addResponse()       // Adds a response to the list of responses for the event.
 ```
