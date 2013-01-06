@@ -20,10 +20,11 @@ use Philip\IRC\Event;
  */
 abstract class AbstractPlugin
 {
-    /**
-     * @var \Philip\Philip
-     */
+    /** @var \Philip\Philip */
     protected $bot;
+
+    /** @var array */
+    protected $config = array();
 
     /**
      * Constructor
@@ -35,10 +36,17 @@ abstract class AbstractPlugin
         $this->bot = $bot;
     }
 
+    abstract public function getName();
+
     /**
      * Init the plugin and start listening to messages
      */
     abstract public function init();
+
+    public function boot(array $config = array())
+    {
+        $this->config = $config;
+    }
 
     /**
      * @param Event $help

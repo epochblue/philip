@@ -194,30 +194,34 @@ class Philip
      * Loads a plugin. See the README for plugin documentation.
      *
      * @param string $name The fully-qualified classname of the plugin to load
-     *
-     * @throws \InvalidArgumentException
      */
-    public function loadPlugin($classname)
+    public function loadPlugin(AbstractPlugin $plugin)
     {
-        if (class_exists($classname) && $plugin = new $classname($this)) {
-            if (!$plugin instanceof AbstractPlugin) {
-                throw new \InvalidArgumentException('Class must be an instance of \Philip\AbstractPlugin');
-            }
+        $name = $plugin->getName();
 
-            $plugin->init();
-            $this->plugins[] = $plugin;
+        $this->log->addDebug('--- Loading plugin ' . $name . PHP_EOL);
+        $plugin->init();
+        $this->plugins[$name] = $plugin;
+    }
+
+    public function getPlugin($name)
+    {
+        if (false === isset($this->plugins[$name])) {
+            throw new \InvalidArgumentException(sprintf('Plugin %s is not registered'));
         }
+
+        return $this->plugins[$name];
     }
 
     /**
      * Loads multiple plugins in a single call.
      *
-     * @param array $names The fully-qualified classnames of the plugins to load.
+     * @param \Philip\AbstractPlugin[] $names The fully-qualified classnames of the plugins to load.
      */
-    public function loadPlugins($classnames)
+    public function loadPlugins(array $plugins)
     {
-        foreach ($classnames as $classname) {
-            $this->loadPlugin($classname);
+        foreach ($plugins as $plugin) {
+            $this->loadPlugin($plugin);
         }
     }
 
@@ -239,6 +243,13 @@ class Philip
         if ($this->connect()) {
             $this->login();
             $this->join();
+
+            foreach ($this->plugins as $plugin) {
+                $name = $plugin->getName();
+                $this->log->addDebug('--- Booting plugin ' . $name . PHP_EOL);
+                $plugin->boot(isset($this->config[$name]) ? $this->config[$name] : array());
+            }
+
             $this->listen();
         }
     }
@@ -340,7 +351,7 @@ class Philip
      *
      * @param array $responses The responses to send back to the server
      */
-    private function send($responses)
+    public function send($responses)
     {
         if (!is_array($responses)) {
             $responses = array($responses);
