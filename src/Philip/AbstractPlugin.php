@@ -9,6 +9,8 @@
  */
 namespace Philip;
 
+use Philip\IRC\Event;
+
 /**
  * Philip Plugin Abstract
  *
@@ -37,4 +39,11 @@ abstract class AbstractPlugin
      * Init the plugin and start listening to messages
      */
     abstract public function init();
+
+    /**
+     * @param Event $help
+     */
+    public function displayHelp(Event $help)
+    {
+    }
 }

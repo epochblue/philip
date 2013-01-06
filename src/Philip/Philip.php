@@ -42,6 +42,9 @@ class Philip
     /** @var string $pidfile The location to write to, if write_pidfile is enabled */
     private $pidfile;
 
+    /** @var \Philip\AbstractPlugin[] */
+    private $plugins = array();
+
     /**
      * Constructor.
      *
@@ -202,6 +205,7 @@ class Philip
             }
 
             $plugin->init();
+            $this->plugins[] = $plugin;
         }
     }
 
@@ -428,5 +432,15 @@ class Philip
 
         $this->dispatcher->addListener('server.ping', array($pingHandler, 'testAndExecute'));
         $this->dispatcher->addListener('server.error', array($errorHandler, 'testAndExecute'));
+
+        $plugins = & $this->plugins;
+        $help = function(Event $event) use (& $plugins) {
+            foreach ($plugins as $plugin) {
+                $plugin->displayHelp($event);
+            }
+        };
+
+        $this->onChannel('/^!help$/', $help);
+        $this->onPrivateMessage('/^!help$/', $help);
     }
 }
