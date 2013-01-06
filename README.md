@@ -51,17 +51,21 @@ Here's a basic example:
 require __DIR__ . '/vendor/autoload.php';
 
 $config = array(
-    "hostname"   => "irc.freenode.net",
-    "servername" => "example.com",
-    "port"       => 6667,
-    "username"   => "examplebot",
-    "realname"   => "example IRC Bot",
-    "nick"       => "examplebot",
-    "password"   => "botpassword",
-    "channels"   => array( '#example-channel' ),
-    "admins"     => array( 'example' ),
-    "debug"      => true,
-    "log"        => __DIR__ . '/bot.log',
+    "hostname"     => "irc.freenode.net",
+    "servername"   => "example.com",
+    "port"         => 6667,
+    "username"     => "examplebot",
+    "realname"     => "example IRC Bot",
+    "nick"         => "examplebot",
+    "password"     => "botpassword",
+    "channels"     => array( '#example-channel' ),
+    "unflood"      => array(
+        "interval" => 500000, // Interval between messages
+        "delay"    => 2000000 // Delay after request handling
+    ),
+    "admins"       => array( 'example' ),
+    "debug"        => true,
+    "log"          => __DIR__ . '/bot.log',
 );
 
 $bot = new Philip($config);
