@@ -57,6 +57,7 @@ $config = array(
     "username"   => "examplebot",
     "realname"   => "example IRC Bot",
     "nick"       => "examplebot",
+    "password"   => "botpassword",
     "channels"   => array( '#example-channel' ),
     "admins"     => array( 'example' ),
     "debug"      => true,

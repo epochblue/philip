@@ -263,6 +263,13 @@ class Philip
             $this->config['servername'],
             $this->config['realname']
         ));
+
+        if(isset($this->config['password'])) {
+            $this->send(Response::msg(
+                'NickServ',
+                'identify ' . $this->config['password']
+            ));
+        }
     }
 
     /**
