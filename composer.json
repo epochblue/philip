@@ -17,6 +17,9 @@
         "monolog/monolog": "1.2.*",
         "symfony/event-dispatcher": "2.1.*"
     },
+    "require-dev": {
+        "atoum/atoum": "dev-master"
+    },
     "autoload": {
         "psr-0": {
             "Philip": "src/"

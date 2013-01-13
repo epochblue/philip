@@ -22,7 +22,7 @@ class Event extends BaseEvent
     /** @var \Philip\IRC\Request $request The request object for this event */
     private $request;
 
-    /** @var array $responses Array of responses for the event */
+    /** @var \Philip\IRC\Response[] Array of responses for the event */
     private $responses = array();
 
     /** @var array $matches Array of matches for the pattern */
@@ -31,9 +31,9 @@ class Event extends BaseEvent
     /**
      * Constructor.
      *
-     * @param $request
+     * @param \Philip\IRC\Request $request
      */
-    public function __construct($request)
+    public function __construct(Request $request)
     {
         $this->request = $request;
     }
@@ -43,9 +43,11 @@ class Event extends BaseEvent
      *
      * @param array $matches
      */
-    public function setMatches($matches)
+    public function setMatches(array $matches)
     {
         $this->matches = $matches;
+
+        return $this;
     }
 
     /**
@@ -71,17 +73,19 @@ class Event extends BaseEvent
     /**
      * Add a response to the list of responses.
      *
-     * @param $response
+     * @param \Philip\IRC\Response $response
      */
-    public function addResponse($response)
+    public function addResponse(Response $response)
     {
         array_push($this->responses, $response);
+
+        return $this;
     }
 
     /**
      * Get the responses.
      *
-     * @return array
+     * @return \Philip\IRC\Response[]
      */
     public function getResponses()
     {

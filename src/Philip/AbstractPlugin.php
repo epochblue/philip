@@ -46,6 +46,8 @@ abstract class AbstractPlugin
     public function boot(array $config = array())
     {
         $this->config = $config;
+
+        return $this;
     }
 
     /**
@@ -53,5 +55,21 @@ abstract class AbstractPlugin
      */
     public function displayHelp(Event $help)
     {
+    }
+
+    /**
+     * @return \Philip\Philip
+     */
+    public function getBot()
+    {
+        return $this->bot;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 }
