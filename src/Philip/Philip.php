@@ -45,6 +45,9 @@ class Philip
     /** @var \Philip\AbstractPlugin[] */
     private $plugins = array();
 
+    /** @var bool */
+    private $askStop = false;
+
     /**
      * Constructor.
      *
@@ -331,7 +334,14 @@ class Philip
                     $this->send($responses);
                 }
             }
-        } while (!feof($this->socket));
+        } while (!feof($this->socket) && false === $this->askStop);
+    }
+
+    public function askStop()
+    {
+        $this->askStop = true;
+
+        return $this;
     }
 
     /**
