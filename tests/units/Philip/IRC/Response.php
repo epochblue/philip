@@ -25,8 +25,8 @@ class Response extends atoum
                 ->isEqualTo('NOTICE ' . $channel . ' :' . $message)
             ->castToString(TestedClass::action($channel, $message))
                 ->isEqualTo('PRIVMSG ' . $channel . ' :' . "\x01ACTION " . $message . "\x01")
-            ->castToString(TestedClass::user($nick = uniqid(), $host = uniqid(), $server = uniqid(), $name = uniqid()))
-                ->isEqualTo('USER ' . $nick . ' ' . $host . ' ' . $server . ' :' . $name)
+            ->castToString(TestedClass::user($nick = uniqid(), $name = uniqid()))
+                ->isEqualTo('USER ' . $nick . ' 8 * :' . $name)
             ->castToString(TestedClass::nick($nick))
                 ->isEqualTo('NICK :' . $nick)
         ;
