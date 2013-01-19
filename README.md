@@ -28,7 +28,7 @@ Then create and open a `composer.json` file. Add Philip to the list of required 
 ```javascript
 {
     "require": {
-        "epochblue/philip": "dev-master"
+        "epochblue/philip": "1.0.*"
     }
 }
 ```
