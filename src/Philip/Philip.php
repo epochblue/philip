@@ -220,7 +220,7 @@ class Philip
     /**
      * Loads a plugin. See the README for plugin documentation.
      *
-     * @param string $name The fully-qualified classname of the plugin to load
+     * @param AbstractPlugin $plugin An instance of the plugin to load
      *
      * @return \Philip\Philip
      */
@@ -450,7 +450,7 @@ class Philip
                 $handler->setFormatter(new LineFormatter($format));
                 $this->log->pushHandler($handler);
             } catch (\Exception $e) {
-                throw \Exception("Unable to open/read log file.");
+                throw new \Exception("Unable to open/read log file.");
             }
         } else {
             $this->log->pushHandler(new NullHandler());
@@ -483,34 +483,28 @@ class Philip
     }
 
     /**
-     * Loads default event handlers for basic IRC commands.
+     * Loads default event handlers for basic IRC commands that won't be
+     * unique to each bot.
      */
     private function addDefaultHandlers()
     {
         $log = $this->log;
 
         // When the server PINGs us, just respond with PONG and the server's host
-        $this->onServer(
-            'ping',
-            function($event) {
-                $event->addResponse(Response::pong($event->getRequest()->getMessage()));
-            }
-        );
+        $this->onServer('ping', function(Event $event) {
+            $event->addResponse(Response::pong($event->getRequest()->getMessage()));
+        });
 
         // If an Error message is encountered, just log it for now.
-        $this->onError(
-            function($event) use ($log) {
-                $log->debug("ERROR: {$event->getRequest()->getMessage()}");
-            }
-        );
+        $this->onError(function(Event $event) use ($log) {
+            $log->debug("--- ERROR: {$event->getRequest()->getMessage()}");
+        });
 
         $plugins = & $this->plugins;
-        $help = function(Event $event) use (& $plugins) {
+        $this->onMessages('/^!help$/', function(Event $event) use (& $plugins) {
             foreach ($plugins as $plugin) {
                 $plugin->displayHelp($event);
             }
-        };
-
-        $this->onMessages('/^!help$/', $help);
+        });
     }
 }
