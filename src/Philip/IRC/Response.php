@@ -129,15 +129,13 @@ class Response
     /**
      * Creates a USER response.
      *
-     * @param  string   $nick     The bot's nickname
-     * @param  string   $host     The IRC host to connect to
-     * @param  string   $server   The server name
+     * @param  string   $username The bot's username
      * @param  string   $realname The bot's "real name"
      * @return Response An IRC Response object
      */
-    public static function user($nick, $host, $server, $realname)
+    public static function user($username, $realname)
     {
-        return new self('USER', array($nick, $host, $server, $realname));
+        return new self('USER', array($username, '8', '*', $realname));
     }
 
     /**
