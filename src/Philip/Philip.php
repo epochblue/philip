@@ -316,9 +316,9 @@ class Philip
     {
         $this->send(Response::nick($this->config['nick']));
         $this->send(Response::user(
-            $this->config['nick'],
-            $this->config['hostname'],
-            $this->config['servername'],
+            $this->config['username'],
+            '8',    // makes the bot hidden to anyone not in a channel with it
+            '*',
             $this->config['realname']
         ));
 
