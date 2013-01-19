@@ -121,7 +121,7 @@ Possible values for &lt;Event&gt; include `Channel`, `PrivateMessage`, and `Mess
 // Message Events
 $bot->onChannel()           // listens only to channel messages
 $bot->onPrivateMessage()    // listens only to private messages
-$bot->onMessage()           // listens to both channel messages and private messages
+$bot->onMessages()          // listens to both channel messages and private messages
 
 // Server Events
 $bot->onJoin()              // listens only for people joining channels
@@ -205,9 +205,11 @@ For example, if you had a plugin whose full, namespaced classname was \Example\P
 you can do load it in your both with either of the following:
 
 ```php
-$bot->loadPlugin('Example\\Philip\\HelloPlugin');
+$bot = new Philip(array(/*...*/));
+$bot->loadPlugin(new \Example\PhilipPlugin\HelloPlugin($bot));
 $bot->loadPlugins(array(
-    'Example\\Philip\\HelloPlugin',
+    new \Example\PhilipPlugin\HelloPlugin($bot),
+    // ...
 ));
 ```
 
