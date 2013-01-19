@@ -304,7 +304,7 @@ class Philip
     private function connect()
     {
         stream_set_blocking(STDIN, 0);
-        $this->socket = fsockopen($this->config['hostname'], $this->config['port']);
+        $this->socket = fsockopen($this->config['server'], $this->config['port']);
 
         return (bool) $this->socket;
     }

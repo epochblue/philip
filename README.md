@@ -51,8 +51,7 @@ Here's a basic example:
 require __DIR__ . '/vendor/autoload.php';
 
 $config = array(
-    "hostname"     => "irc.freenode.net",
-    "servername"   => "example.com",
+    "server"       => "irc.freenode.net",
     "port"         => 6667,
     "username"     => "examplebot",
     "realname"     => "example IRC Bot",
