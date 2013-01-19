@@ -30,31 +30,36 @@ abstract class AbstractPlugin
      * Constructor
      *
      * @param \Philip\Philip $bot
+     * @param array $config Any plugin-specific configuration
      */
-    public function __construct(Philip $bot)
+    public function __construct(Philip $bot, array $config = array())
     {
         $this->bot = $bot;
+        $this->config = $config;
     }
 
+    /**
+     * Returns a string name version of the plugin.
+     *
+     * @return string The name of the plugin
+     */
     abstract public function getName();
 
     /**
-     * Init the plugin and start listening to messages
+     * Init the plugin and start listening to messages.
      */
     abstract public function init();
 
-    public function boot(array $config = array())
-    {
-        $this->config = $config;
-
-        return $this;
-    }
-
     /**
+     * Returns a help message for the plugin.
+     *
      * @param Event $help
+     *
+     * @return string A simple help message.
      */
     public function displayHelp(Event $help)
     {
+        return "No help has been defined for this plugin.";
     }
 
     /**

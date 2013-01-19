@@ -18,18 +18,13 @@ class AbstractPlugin extends atoum
         ;
     }
 
-    public function testBoot()
+    public function testGetEmptyConfig()
     {
         $this
             ->if($bot = new \Philip\Philip())
             ->and($object = new \mock\Philip\AbstractPlugin($bot))
             ->then
-                ->object($object->boot())->isIdenticalTo($object)
                 ->array($object->getConfig())->isEqualTo(array())
-            ->if($config = array(uniqid() => uniqid()))
-            ->then
-                ->object($object->boot($config))->isIdenticalTo($object)
-                ->array($object->getConfig())->isEqualTo($config)
         ;
     }
 
@@ -37,13 +32,10 @@ class AbstractPlugin extends atoum
     {
         $this
             ->if($bot = new \Philip\Philip())
-            ->and($object = new \mock\Philip\AbstractPlugin($bot))
-            ->then
-                ->array($object->getConfig())->isEqualTo(array())
             ->if($config = array(uniqid() => uniqid()))
-            ->and($object->boot($config))
+            ->and($object = new \mock\Philip\AbstractPlugin($bot, $config))
             ->then
-                ->array($object->getConfig())->isEqualTo($config)
+            ->array($object->getConfig())->isEqualTo($config)
         ;
     }
 }

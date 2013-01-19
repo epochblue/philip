@@ -228,6 +228,7 @@ class Philip
     {
         $name = $plugin->getName();
         $this->log->addDebug('--- Loading plugin ' . $name . PHP_EOL);
+
         $plugin->init();
         $this->plugins[$name] = $plugin;
 
@@ -251,6 +252,8 @@ class Philip
     }
 
     /**
+     * Retrieves a plugin with the given name.
+     *
      * @param string $name
      *
      * @throws \InvalidArgumentException
@@ -259,7 +262,7 @@ class Philip
      */
     public function getPlugin($name)
     {
-        if (false === isset($this->plugins[$name])) {
+        if (!isset($this->plugins[$name])) {
             throw new \InvalidArgumentException(sprintf('Plugin %s is not registered'));
         }
 
@@ -285,13 +288,6 @@ class Philip
         if ($this->connect()) {
             $this->login();
             $this->join();
-
-            foreach ($this->plugins as $plugin) {
-                $name = $plugin->getName();
-                $this->log->addDebug('--- Booting plugin ' . $name . PHP_EOL);
-                $plugin->boot(isset($this->config[$name]) ? $this->config[$name] : array());
-            }
-
             $this->listen();
         }
     }
