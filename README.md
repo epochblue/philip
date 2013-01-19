@@ -272,12 +272,14 @@ _This license is also included in the `LICENSE` file._
 Author
 ------
 
-Bill Israel - [https://github.com/epochblue](https://github.com/epochblue) - [http://twitter.com/epochblue](http://twitter.com/epochblue)
+Bill Israel - [https://github.com/epochblue](https://github.com/epochblue) - [https://twitter.com/epochblue](https://twitter.com/epochblue)
 
 Contributors
 ------------
 
-Doug Hurst - [https://github.com/dalanhurst](https://github.com/dalanhurst)- [http://twitter.com/dalanhurst](http://twitter.com/dalanhurst)
+Doug Hurst - [https://github.com/dalanhurst](https://github.com/dalanhurst) - [https://twitter.com/dalanhurst](https://twitter.com/dalanhurst)
+Micah Breedlove - [https://github.com/druid628](https://github.com/druid628) - [https://twitter.com/druid628](https://twitter.com/druid628)
+Julien Bianchi - [https://github.com/jubianchi](https://github.com/jubianchi) - [https://twitter.com/jubianchi](https://twitter.com/jubianchi)
 
 Acknowledgements
 ----------------
