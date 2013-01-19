@@ -1,6 +1,8 @@
 Philip - a PHP IRC bot framework
 ================================
 
+[![Build Status](https://travis-ci.org/epochblue/philip.png?branch=master)](undefined)
+
 Philip is a [Slim](http://slimframework.com/)-inspired framwork for creating simple IRC bots.
 It was written by [Bill Israel](http://billisrael.info/). The purpose of the project is to
 allow people to create fun, simple IRC bots with minimal overhead or complexity.
