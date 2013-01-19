@@ -279,8 +279,8 @@ Bill Israel - [https://github.com/epochblue](https://github.com/epochblue) - [ht
 Contributors
 ------------
 
-Doug Hurst - [https://github.com/dalanhurst](https://github.com/dalanhurst) - [https://twitter.com/dalanhurst](https://twitter.com/dalanhurst)
-Micah Breedlove - [https://github.com/druid628](https://github.com/druid628) - [https://twitter.com/druid628](https://twitter.com/druid628)
+Doug Hurst - [https://github.com/dalanhurst](https://github.com/dalanhurst) - [https://twitter.com/dalanhurst](https://twitter.com/dalanhurst) <br/>
+Micah Breedlove - [https://github.com/druid628](https://github.com/druid628) - [https://twitter.com/druid628](https://twitter.com/druid628) <br/>
 Julien Bianchi - [https://github.com/jubianchi](https://github.com/jubianchi) - [https://twitter.com/jubianchi](https://twitter.com/jubianchi)
 
 Acknowledgements
