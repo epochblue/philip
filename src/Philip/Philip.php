@@ -325,7 +325,7 @@ class Philip
         if (isset($this->config['password'])) {
             $this->send(Response::msg(
                 'NickServ',
-                'identify ' . $this->config['password']
+                'IDENTIFY ' . $this->config['password']
             ));
         }
     }
