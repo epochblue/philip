@@ -491,15 +491,28 @@ class Philip
             $event->addResponse(Response::pong($event->getRequest()->getMessage()));
         });
 
-        // If an Error message is encountered, just log it for now.
+        // If an ERROR message is encountered, just log it for now.
         $this->onError(function(Event $event) use ($log) {
             $log->debug("--- ERROR: {$event->getRequest()->getMessage()}");
         });
 
         $plugins = & $this->plugins;
-        $this->onMessages('/^!help$/', function(Event $event) use (& $plugins) {
+        $this->onMessages('/^!help\s*$/', function(Event $event) use (& $plugins) {
             foreach ($plugins as $plugin) {
-                $plugin->displayHelp($event);
+                $messages = $plugin->displayHelp($event);
+
+                // Surely there's a better way to do this... <sadface>
+                if (is_array($messages)) {
+                    foreach ($messages as $message) {
+                        $event->addResponse(
+                            Response::msg($event->getRequest()->getSendingUser(), $message)
+                        );
+                    }
+                } else {
+                    $event->addResponse(
+                        Response::msg($event->getRequest()->getSendingUser(), $messages)
+                    );
+                }
             }
         });
     }

@@ -53,13 +53,13 @@ abstract class AbstractPlugin
     /**
      * Returns a help message for the plugin.
      *
-     * @param Event $help
+     * @param Event $event
      *
      * @return string A simple help message.
      */
-    public function displayHelp(Event $help)
+    public function displayHelp(Event $event)
     {
-        return "No help has been defined for this plugin.";
+        // By default, don't print a help message
     }
 
     /**
