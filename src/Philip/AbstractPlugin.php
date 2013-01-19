@@ -9,6 +9,8 @@
  */
 namespace Philip;
 
+use Philip\IRC\Event;
+
 /**
  * Philip Plugin Abstract
  *
@@ -18,10 +20,11 @@ namespace Philip;
  */
 abstract class AbstractPlugin
 {
-    /**
-     * @var \Philip\Philip
-     */
+    /** @var \Philip\Philip */
     protected $bot;
+
+    /** @var array */
+    protected $config = array();
 
     /**
      * Constructor
@@ -33,8 +36,40 @@ abstract class AbstractPlugin
         $this->bot = $bot;
     }
 
+    abstract public function getName();
+
     /**
      * Init the plugin and start listening to messages
      */
     abstract public function init();
+
+    public function boot(array $config = array())
+    {
+        $this->config = $config;
+
+        return $this;
+    }
+
+    /**
+     * @param Event $help
+     */
+    public function displayHelp(Event $help)
+    {
+    }
+
+    /**
+     * @return \Philip\Philip
+     */
+    public function getBot()
+    {
+        return $this->bot;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
 }

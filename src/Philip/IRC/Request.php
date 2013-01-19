@@ -17,30 +17,30 @@ namespace Philip\IRC;
  */
 class Request
 {
-    // IRC Message Constants
-    private static $PREFIX   = 1;
-    private static $COMMAND  = 2;
-    private static $MIDDLE   = 3;
-    private static $TRAILING = 4;
-
-    // IRC User Prefix Constants
-    private static $NICK = 1;
-    private static $USER = 2;
-    private static $HOST = 3;
-
-    // Saves 4 parts: <prefix> <command> <middle params> <trailing param>
-    private static $RE_MSG = '/^(?:[:@]([^\\s]+) )?([^\\s]+)(?: ((?:[^:\\s][^\\s]* ?)*))?(?: ?:(.*))?$/';
-
-    // Saves 3 parts: <nick> <username> <hostname>
-    private static $RE_SENDER = '/^([^!@]+)!(?:[ni]=)?([^@]+)@([^ ]+)$/';
+    const RE_MSG = '/^
+        (?:
+            \:(?P<prefix>
+                (?P<server>[^\s!]*)
+                (?:!~?(?P<user>[^\s]+)@(?P<host>[^\s]+))?
+            )\s+
+        )?
+        (?P<command>[a-zA-Z]+|[0-9]{3})
+        (?:\s+(?P<channel>[#&!+]+[^\x07\x2C\s]{0,200}))?
+        (?:(?P<params>(?:\s+[^:][^\s]*)*))?
+        (?:\s+\:(?P<message>[^\r\n]*))?
+        \r?\n?
+    $/x';
 
     // Member Vars
     private $raw;
     private $prefix;
+    private $server;
+    private $user;
+    private $host;
     private $cmd;
-    private $middle;
-    private $trailing;
-
+    private $channel;
+    private $params;
+    private $message;
 
     /**
      * Constructor.
@@ -50,148 +50,136 @@ class Request
     public function __construct($raw)
     {
 		$this->raw = $raw;
-
         $matches = array();
-        preg_match(self::$RE_MSG, $raw, $matches);
 
-		// Remove newlines and carriage returns
-		$count = count($matches);
-		for($i = $count - 1; $i >= 0; $i--) {
-			$matches[$i] = str_replace(array(chr(10), chr(13)), '', $matches[$i]); 
-		}
+        if (preg_match(self::RE_MSG, $raw, $matches)) {
+            $this->prefix   = $matches['prefix'];
+            $this->server   = $matches['server'];
+            $this->user     = $matches['user'];
+            $this->host     = $matches['host'];
+            $this->cmd      = $matches['command'];
+            $this->channel  = $matches['channel'];
 
-		if ($count) {
-			$this->prefix   = $matches[self::$PREFIX];
-			$this->cmd      = $matches[self::$COMMAND];
-			$this->middle   = $matches[self::$MIDDLE] ? explode(' ', $matches[self::$MIDDLE]) : null;
-			$this->trailing = $matches[self::$TRAILING] ?: null;
-		}
+            if (!empty($matches['params'])) {
+                $this->params = explode(' ', trim($matches['params']));
+            } else {
+                $this->params = array();
+            }
+
+            if (isset($matches['message'])) {
+                $this->message  = $matches['message'];
+            }
+        } else {
+            throw new \InvalidArgumentException(sprintf('Invalid command: %s', $raw));
+        }
     }
 
-	/**
-	 * Returns the sent command.
-	 *
-	 * @return string The IRC command in the request
-	 */
+    /**
+     * Returns the sent command.
+     *
+     * @return string The IRC command in the request
+     */
     public function getCommand()
     {
-		return $this->cmd;
-	}
+        return $this->cmd;
+    }
 
-	/**
-	 * Returns the parameters from the request.
-	 *
-	 * @return array The parameters in the request (minus the trailing param)
-	 */
+    /**
+     * Returns the parameters from the request.
+     *
+     * @return array The parameters in the request (minus the trailing param)
+     */
     public function getParams()
     {
-		if (is_array($this->middle)) {
-			return $this->middle;
-		}
+        return $this->params;
+    }
 
-		return array();
-	}
-
-	/**
-	 * Returns the message portion of the request.
-	 *
-	 * @return string The message/trailing part of the request
-	 */
+    /**
+     * Returns the message portion of the request.
+     *
+     * @return string The message/trailing part of the request
+     */
     public function getMessage()
     {
-		if ($this->trailing) {
-			return $this->trailing;
-		}
+        return $this->message;
+    }
 
-		return '';
-	}
-
-	/**
-	 * Returns the source of the message. If it was a PM, the source
-	 * will be a user's nick. If it was a message in a channel, it'll
-	 * be the channel name.
-	 *
-	 * @return string The sending user's nick, or the channel name
-	 */
+    /**
+     * Returns the source of the message. If it was a PM, the source
+     * will be a user's nick. If it was a message in a channel, it'll
+     * be the channel name.
+     *
+     * @return string The sending user's nick, or the channel name
+     */
     public function getSource()
     {
-		if ($this->isPrivateMessage()) {
-			return $this->getSendingUser();
-		}
+        if ($this->isPrivateMessage()) {
+            return $this->getSendingUser();
+        }
 
-		return $this->middle[0];
-	}
+        return $this->channel;
+    }
 
-	/**
-	 * Returns the sending user's nick, false otherwise.
-	 *
-	 * @return mixed The sending user's nick, or false if it wasn't sent by a user
-	 */
+    /**
+     * Returns the sending user's nick, false otherwise.
+     *
+     * @return mixed The sending user's nick, or false if it wasn't sent by a user
+     */
     public function getSendingUser()
     {
-		if ($this->isFromUser()) {
-			$matches = array();
-			preg_match(self::$RE_SENDER, $this->prefix, $matches);
+        if ($this->isFromUser()) {
+            return $this->server;
+        }
 
-			return $matches[self::$NICK];
-		}
+        return false;
+    }
 
-		return false;
-	}
-
-	/**
-	 * Return the sending server if it was sent by a server, false otherwise.
-	 *
-	 * @return mixed The sending server, or false if it wasn't sent by a server
-	 */
+    /**
+     * Return the sending server if it was sent by a server, false otherwise.
+     *
+     * @return mixed The sending server, or false if it wasn't sent by a server
+     */
     public function getServer()
     {
-		if ($this->isFromServer()) {
-			return $this->prefix;
-		}
+        if ($this->isFromServer()) {
+            return $this->prefix;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * Returns true if the message is a private message.
-	 *
-	 * @return bool True if the message is a private one
-	 */
+    /**
+     * Returns true if the message is a private message.
+     *
+     * @return bool True if the message is a private one
+     */
     public function isPrivateMessage()
     {
-		return isset($this->middle[0]) && !$this->isChannel($this->middle[0]);	
-	}
+        return empty($this->channel);
+    }
 
-	/**
-	 * Returns true if the message was sent by a user.
-	 *
-	 * @return bool True if the request was from a user, false otherwise
-	 */
+    /**
+     * Returns true if the message was sent by a user.
+     *
+     * @return bool True if the request was from a user, false otherwise
+     */
     public function isFromUser()
     {
-		return (bool) preg_match(self::$RE_SENDER, $this->prefix);
-	}
+        return !empty($this->user);
+    }
 
-	/**
-	 * Returns true if the message was sent from a server.
-	 *
-	 * @return bool True if the request was from a server, false otherwise
-	 */
+    /**
+     * Returns true if the message was sent from a server.
+     *
+     * @return bool True if the request was from a server, false otherwise
+     */
     public function isFromServer()
     {
-		return !$this->isFromUser();
-	}
+        return !$this->isFromUser();
+    }
 
-	/**
-	 * Determines whether the given string is a channel name.
-	 *
-	 * @param string $str The string to test
-	 * @return bool True if the string is a channel name, false otherwise
-	 */
-    private function isChannel($str)
+    public function getHost()
     {
-		// Channels can start with #, &, !, or + (and have more than 1 of them)
-		return strspn($str, '#&!+', 0, 1) >= 1;
-	}
+        return $this->host;
+    }
 }
