@@ -215,12 +215,21 @@ $bot->loadPlugins(array(
 ));
 ```
 
+Plugins accept a second (optional) parameter on their constructor if the plugin
+requires some configuration. Loading a plugin that accepts configuration might look
+like this:
+
+```php
+$bot = new Philip(array(/*...*/));
+$bot->loadPlugin(new \Example\PhilipPlugin\HelloPlugin($bot, $config['HelloPlugin']));
+```
+
 Additionally, if you'd like to turn some of your bot's functionality into a plugin, that's easy as well.
 
 ### Writing a plugin
 
 Creating a plugin is simple. A plugin must extend the `Philip\AbstractPlugin` class and must provide
-and implementation for an `init()` method. And that's it. Your plugin can be named anything, however, by
+and implementation for an `init()` and a `getName()` method. And that's it. Your plugin can be named anything, however, by
 convention most Philip plugins are named like `<xxx>Plugin` Below is an example of a simple plugin:
 
 ```php
@@ -244,6 +253,14 @@ class HelloPlugin extends BasePlugin
                 Response::msg($request->getSource(), "Hi, {$request->getSendingUser()}!")
             );
         });
+    }
+
+    /**
+     * Returns the Plugin's name
+     */
+    public function getName()
+    {
+        return 'HelloPlugin';
     }
 }
 ```
