@@ -84,7 +84,38 @@ $> php examplebot.php
 
 And that's all there is to it! Your bot will connect to the IRC server and join the channels you've
 specified. Then it'll start listening for any commands you've created. For more information about
-Philip's API, please see the API section below.
+Philip's API, please see the API section below. But first, let's quickly cover the configuration
+array...
+
+Configuration
+-------------
+
+Configuration for Philip is a basic array of key-value pairs. Here's a quick
+reference to what each key value pair is:
+
+* _server_: _string_, the name of the IRC server to connect to
+* _port_: _int_, the port on the IRC sever to connect to
+* _username_: _string_, the IRC username for the bot
+* _realname_: _string_, the IRC "real name" for the bot
+* _nick_: _string_, the IRC nickname for the bot
+* _password_: _string_, _optional_, the password to identify the bot with NickServ
+* _channels_: _array_, an array of channels for the bot to join. Can also join channels
+with passwords. For example:
+
+    ```php
+    'channels' => array(
+        '#channel-without-password',
+        array('#channel-with-password' => 'channel-password')
+    )
+    ```
+
+* _unflood_: _int_, _optional_, the amount of time to wait between sending
+messages
+* _admins_: _array_, _optional_, an array of names of IRC users who have admin
+control of the bot (required by some plugins)
+* _debug_: _boolean_, whether or not to print debug information,
+* _log_: _string_, path where to store the bot's log file, required if _debug_
+is turned on
 
 
 API

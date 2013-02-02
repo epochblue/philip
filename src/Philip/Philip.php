@@ -333,9 +333,27 @@ class Philip
             $this->config['channels'] = array($this->config['channels']);
         }
 
+        $channels = array();
+        $passwords = array();
+        $without_passwords = array();
+
+        // Separate them into groups to make it easier to deal with
         foreach ($this->config['channels'] as $channel) {
-            $this->send(Response::join($channel));
+            if (is_array($channel)) {
+                foreach($channel as $chan => $pass) {
+                    $channels[] = $chan;
+                    $passwords[] = $pass;
+                }
+            } else {
+                $without_passwords[] = $channel;
+            }
         }
+        $join = sprintf('%s %s',
+            implode(',', array_merge($channels, $without_passwords)),
+            implode(',', $passwords)
+        );
+
+        $this->send(Response::join($join));
     }
 
     /**
