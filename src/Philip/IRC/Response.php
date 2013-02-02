@@ -17,9 +17,6 @@ namespace Philip\IRC;
  */
 class Response
 {
-    /** @var array $args The IRC command response arguments */
-    private $args;
-
     /**
      * Constructor.
      *
@@ -36,52 +33,51 @@ class Response
         $end = count($args) - 1;
         $args[$end] = ':' . $args[$end];
 
-        $this->args = $args;
-        array_unshift($this->args, strtoupper($cmd));
+        return sprintf('%s %s', strtoupper($cmd), implode(' ', $args));
     }
 
     /**
      * Creates a PONG response.
      *
      * @param  string   $host The host string to send back
-     * @return Response An IRC Response object
+     * @return string An IRC response message
      */
     public static function pong($host)
     {
-        return new self('PONG', $host);
+        return sprintf('%s :%s', 'PONG', $host);
     }
 
     /**
      * Creates a QUIT response.
      *
      * @param  string   $msg The quitting message
-     * @return Response An IRC Response object
+     * @return string An IRC response message
      */
     public static function quit($msg)
     {
-        return new self('QUIT', $msg);
+        return sprintf('%s :%s', 'QUIT', $msg);
     }
 
     /**
      * Creates a JOIN response.
      *
      * @param  string   $channels The channels to join
-     * @return Response An IRC Response object
+     * @return string An IRC response message
      */
     public static function join($channels)
     {
-        return new self('JOIN', $channels);
+        return sprintf('%s %s', 'JOIN', $channels);
     }
 
     /**
      * Creates a PART response.
      *
      * @param  string   $channels The channels to leave
-     * @return Response An IRC Response object
+     * @return string An IRC response message
      */
     public static function leave($channels)
     {
-        return new self('PART', $channels);
+        return sprintf('%s %s', 'PART', $channels);
     }
 
     /**
@@ -89,29 +85,29 @@ class Response
      *
      * @param  string   $who  The channel/nick to send this msg to
      * @param  string   $what The messages to send
-     * @return Response An IRC Response object
+     * @return string An IRC response message
      */
     public static function msg($who, $what)
     {
-        return new self('PRIVMSG', array($who, $what));
+        return sprintf('%s %s :%s', 'PRIVMSG', $who, $what);
     }
 
     /**
      * Creates a NOTICE response.
      *
      * @param  string   $channel The channel to send the notice to.
-     * @return Response An IRC Response object
+     * @return string An IRC response message
      */
     public static function notice($channel, $msg)
     {
-        return new self('NOTICE', array($channel, $msg));
+        return sprintf('%s %s :%s', 'NOTICE', $channel, $msg);
     }
 
     /**
      * Creates a ACTION response.
      *
      * @param  string   $channel The channel to send the action to.
-     * @return Response An IRC Response object
+     * @return string An IRC response message
      */
     public static function action($channel, $msg)
     {
@@ -123,7 +119,7 @@ class Response
         //	http://www.dreamincode.net/forums/topic/85216-irc-action/page__p__535748&#entry535748
         $msg = "\x01ACTION $msg\x01";
 
-        return new self('PRIVMSG', array($channel, $msg));
+        return self::msg($channel, $msg);
     }
 
     /**
@@ -131,31 +127,21 @@ class Response
      *
      * @param  string   $username The bot's username
      * @param  string   $realname The bot's "real name"
-     * @return Response An IRC Response object
+     * @return string An IRC response message
      */
     public static function user($username, $realname)
     {
-        return new self('USER', array($username, '8', '*', $realname));
+        return sprintf('%s %s %s %s :%s', 'USER', $username, '8', '*', $realname);
     }
 
     /**
      * Creates a NICK response.
      *
      * @param  string   $nick The nickname to set
-     * @return Response An IRC Response object
+     * @return string An IRC response message
      */
     public static function nick($nick)
     {
-        return new self('NICK', $nick);
-    }
-
-    /**
-     * Stringify this object.
-     *
-     * @return string The string representation of the response
-     */
-    public function __toString()
-    {
-        return implode(' ', $this->args);
+        return sprintf('%s :%s', 'NICK', $nick);
     }
 }

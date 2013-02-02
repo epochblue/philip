@@ -73,9 +73,9 @@ class Event extends BaseEvent
     /**
      * Add a response to the list of responses.
      *
-     * @param \Philip\IRC\Response $response
+     * @param string $response The IRC response
      */
-    public function addResponse(Response $response)
+    public function addResponse($response)
     {
         array_push($this->responses, $response);
 
@@ -85,7 +85,7 @@ class Event extends BaseEvent
     /**
      * Get the responses.
      *
-     * @return \Philip\IRC\Response[]
+     * @return string[] All the responses to send
      */
     public function getResponses()
     {
