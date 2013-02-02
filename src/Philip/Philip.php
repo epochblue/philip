@@ -407,13 +407,9 @@ class Philip
             fwrite($this->socket, $response);
             $this->log->debug('<-- ' . $response);
 
-            if (isset($this->config['unflood']['interval'])) {
-                usleep($this->config['unflood']['interval']);
+            if (isset($this->config['unflood'])) {
+                usleep($this->config['unflood']);
             }
-        }
-
-        if (isset($this->config['unflood']['delay'])) {
-            usleep($this->config['unflood']['delay']);
         }
     }
 

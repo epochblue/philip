@@ -60,10 +60,7 @@ $config = array(
     "nick"         => "examplebot",
     "password"     => "botpassword",
     "channels"     => array( '#example-channel' ),
-    "unflood"      => array(
-        "interval" => 500000, // Interval between messages
-        "delay"    => 2000000 // Delay after request handling
-    ),
+    "unflood"      => 500,
     "admins"       => array( 'example' ),
     "debug"        => true,
     "log"          => __DIR__ . '/bot.log',
