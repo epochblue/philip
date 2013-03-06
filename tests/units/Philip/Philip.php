@@ -152,16 +152,19 @@ class Philip extends atoum
     public function testLoadPlugins()
     {
         $this
-            ->if($object = new \mock\Philip\Philip())
+            ->if($object = new TestedClass())
             ->and($plugin = new \mock\Philip\AbstractPlugin($object))
             ->and($this->calling($plugin)->getName = $name = uniqid())
             ->and($otherPlugin = new \mock\Philip\AbstractPlugin($object))
             ->and($this->calling($otherPlugin)->getName = $otherName = uniqid())
             ->then
                 ->object($object->loadPlugins(array($plugin, $otherPlugin)))->isIdenticalTo($object)
-                ->mock($object)
-                    ->call('loadPlugin')->withArguments($plugin)->once()
-                    ->call('loadPlugin')->withArguments($otherPlugin)->once()
+                ->mock($plugin)
+                    ->call('getName')->once()
+                ->mock($otherPlugin)
+                    ->call('getName')->once()
+                ->object($object->getPlugin($name))->isIdenticalTo($plugin)
+                ->object($object->getPlugin($otherName))->isIdenticalTo($otherPlugin)
         ;
     }
 }
