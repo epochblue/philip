@@ -87,9 +87,9 @@ class Response
      * @param  string   $what The messages to send
      * @return string An IRC response message
      */
-    public static function msg($who, $what)
+    public static function msg($who, $msg)
     {
-        return sprintf('%s %s :%s', 'PRIVMSG', $who, $what);
+        return sprintf('%s %s :%s', 'PRIVMSG', $who, $msg);
     }
 
     /**
@@ -109,7 +109,7 @@ class Response
      * @param  string   $channel The channel to send the action to.
      * @return string An IRC response message
      */
-    public static function action($channel, $msg)
+    public static function action($who, $msg)
     {
         // ACTION isn't really part of the IRC spec, it's kind of an agreement between client devs.
         // An ACTION is just a standard PRIVMSG whose message starts with HEX 01 byte, followed by
@@ -119,7 +119,7 @@ class Response
         //	http://www.dreamincode.net/forums/topic/85216-irc-action/page__p__535748&#entry535748
         $msg = "\x01ACTION $msg\x01";
 
-        return self::msg($channel, $msg);
+        return self::msg($who, $msg);
     }
 
     /**
