@@ -58,7 +58,8 @@ $config = array(
     "username"     => "examplebot",
     "realname"     => "example IRC Bot",
     "nick"         => "examplebot",
-    "password"     => "botpassword",
+    "password"     => "password-for-nickserv",
+    "conection_password" => "conection-password",
     "channels"     => array( '#example-channel' ),
     "unflood"      => 500,
     "admins"       => array( 'example' ),
@@ -99,6 +100,7 @@ reference to what each key value pair is:
 * _realname_: _string_, the IRC "real name" for the bot
 * _nick_: _string_, the IRC nickname for the bot
 * _password_: _string_, _optional_, the password to identify the bot with NickServ
+* *connection_password*: _string_, _optional_, the password to register your connection, if required by the server
 * _channels_: _array_, an array of channels for the bot to join. Can also join channels
 with passwords. For example:
 
