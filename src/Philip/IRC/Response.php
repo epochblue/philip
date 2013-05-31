@@ -135,6 +135,16 @@ class Response
     }
 
     /**
+     * Creates a PASS response.
+     *
+     * @param string $password The user's password
+     */
+    public static function pass($password)
+    {
+        return new self('PASS', $password);
+    }
+
+    /**
      * Creates a NICK response.
      *
      * @param  string   $nick The nickname to set

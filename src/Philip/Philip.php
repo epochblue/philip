@@ -310,6 +310,7 @@ class Philip
      */
     private function login()
     {
+        $this->send(Response::pass($this->config['password']));
         $this->send(Response::nick($this->config['nick']));
         $this->send(Response::user(
             $this->config['username'],
