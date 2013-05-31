@@ -141,7 +141,7 @@ class Response
      */
     public static function pass($password)
     {
-        return new self('PASS', $password);
+        return sprintf('%s %s', 'PASS', $password);
     }
 
     /**

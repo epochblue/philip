@@ -29,6 +29,8 @@ class Response extends atoum
                 ->isEqualTo('USER ' . $nick . ' 8 * :' . $name)
             ->string(TestedClass::nick($nick))
                 ->isEqualTo('NICK :' . $nick)
+            ->string(TestedClass::pass($pass = uniqid()))
+                ->isEqualTo('PASS ' . $pass)
         ;
     }
 }
