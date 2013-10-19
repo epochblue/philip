@@ -299,8 +299,13 @@ class Philip
      */
     private function connect()
     {
+        $server = $this->config['server'];
+        if (isset($this->config['ssl']) && $this->config['ssl'] == true) {
+            $server = 'ssl://' . $server;
+        }
+
         stream_set_blocking(STDIN, 0);
-        $this->socket = fsockopen($this->config['server'], $this->config['port']);
+        $this->socket = fsockopen($server, $this->config['port']);
 
         return (bool) $this->socket;
     }
