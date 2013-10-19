@@ -54,12 +54,13 @@ require __DIR__ . '/vendor/autoload.php';
 
 $config = array(
     "server"       => "irc.freenode.net",
-    "port"         => 6667,
+    "port"         => 6697,
+    "ssl"          => true,
     "username"     => "examplebot",
     "realname"     => "example IRC Bot",
     "nick"         => "examplebot",
     "password"     => "password-for-nickserv",
-    "conection_password" => "conection-password",
+    "connection_password" => "connection-password",
     "channels"     => array( '#example-channel' ),
     "unflood"      => 500,
     "admins"       => array( 'example' ),
