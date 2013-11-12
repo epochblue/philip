@@ -617,7 +617,7 @@ class Philip
         $log = $this->log;
 
         // When the server PINGs us, just respond with PONG and the server's host
-        $this->onServer('ping', function(Event $event) {
+        $this->onPing(function(Event $event) {
             $event->addResponse(Response::pong($event->getRequest()->getMessage()));
         });
 
