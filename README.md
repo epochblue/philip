@@ -133,7 +133,7 @@ between the two is that you can tell Philip to conditionally respond to message 
 bot will always respond to server events, the API for those is simpler:
 
 ```php
-$bot->on<Event>(<callback function>);
+$bot->on<Event>(<callback function>[, <priority>]);
 ```
 
 Possible values for &lt;Event&gt; in this case are: `Join`, `Part`, `Error`, and `Notice`.
@@ -143,7 +143,7 @@ you will supply a regular expression that Philip will test against. If the regex
 then Philip will execute the callback function you provide. The API for message events is:
 
 ```php
-$bot->on<Event>(<regex pattern>, <callback function>);
+$bot->on<Event>(<regex pattern>, <callback function>[, <priority>]);
 ```
 
 Possible values for &lt;Event&gt; include `Channel`, `PrivateMessage`, and `Message`.
@@ -171,6 +171,10 @@ through the event.
 If your regular expression is successfully matched, Philip will execute the callback function you provide,
 allowing you to respond to the message. The `<callback function>` is an anonymous function that accepts
 one parameter: `$event`.
+
+Setting the `<priority>` is optional. In case a event matches multiple callback functions, the one with
+the highest priority is executed first. If priority is not set, the default value (0) will be used.
+If multiple callbacks have the same priority, they are executed in the order they where added.
 
 `$event` is an instance of `Philip\IRC\Event` (which is a simple wrapper over an IRC "event"). The
 main functions in the public API for a Philip Event re:
