@@ -129,19 +129,6 @@ class Philip
     }
 
     /**
-     * Adds event handlers to the list for INVITE messages.
-     *
-     * @param callable $callback The callback to run  when event occurs
-     * @param integer  $priority The priority of this event handler
-     *
-     * @return \Philip\Philip
-     */
-    public function onInvite($callback, $priority = 0)
-    {
-        return $this->onServer('invite', $callback, $priority);
-    }
-
-    /**
      * Adds event handlers to the list for ERROR messages.
      *
      * @param callable $callback The callback to run when event occurs
@@ -152,6 +139,19 @@ class Philip
     public function onError($callback, $priority = 0)
     {
         return $this->onServer('error', $callback, $priority);
+    }
+
+    /**
+     * Adds event handlers to the list for INVITE messages.
+     *
+     * @param callable $callback The callback to run  when event occurs
+     * @param integer  $priority The priority of this event handler
+     *
+     * @return \Philip\Philip
+     */
+    public function onInvite($callback, $priority = 0)
+    {
+        return $this->onServer('invite', $callback, $priority);
     }
 
     /**
