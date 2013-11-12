@@ -82,13 +82,14 @@ class Philip
      *
      * @param string   $pattern  The RegEx to test the message against
      * @param callable $callback The callback to run if the pattern matches
+     * @param integer  $priority The priority of this event handler
      *
      * @return \Philip\Philip
      */
-    public function onChannel($pattern, $callback)
+    public function onChannel($pattern, $callback, $priority = 0)
     {
         $handler = new EventListener($pattern, $callback);
-        $this->dispatcher->addListener('message.channel', array($handler, 'testAndExecute'));
+        $this->dispatcher->addListener('message.channel', array($handler, 'testAndExecute'), $priority);
 
         return $this;
     }
@@ -98,13 +99,14 @@ class Philip
      *
      * @param string   $pattern  The RegEx to test the message against
      * @param callable $callback The callback to run if the pattern matches
+     * @param integer  $priority The priority of this event handler
      *
      * @return \Philip\Philip
      */
-    public function onPrivateMessage($pattern, $callback)
+    public function onPrivateMessage($pattern, $callback, $priority = 0)
     {
         $handler = new EventListener($pattern, $callback);
-        $this->dispatcher->addListener('message.private', array($handler, 'testAndExecute'));
+        $this->dispatcher->addListener('message.private', array($handler, 'testAndExecute'), $priority);
 
         return $this;
     }
@@ -114,14 +116,15 @@ class Philip
      *
      * @param string   $pattern  The RegEx to test the message against
      * @param callable $callback The callback to run if the pattern matches
+     * @param integer  $priority The priority of this event handler
      *
      * @return \Philip\Philip
      */
-    public function onMessages($pattern, $callback)
+    public function onMessages($pattern, $callback, $priority = 0)
     {
         return $this
-            ->onChannel($pattern, $callback)
-            ->onPrivateMessage($pattern, $callback)
+            ->onChannel($pattern, $callback, $priority)
+            ->onPrivateMessage($pattern, $callback, $priority)
         ;
     }
 
@@ -129,54 +132,67 @@ class Philip
      * Adds event handlers to the list for JOIN messages.
      *
      * @param callable $callback The callback to run if the pattern matches
+     * @param integer  $priority The priority of this event handler
      *
      * @return \Philip\Philip
      */
-    public function onJoin($callback)
+    public function onJoin($callback, $priority = 0)
     {
-        return $this->onServer('join', $callback);
+        return $this->onServer('join', $callback, $priority);
     }
 
     /**
      * Adds event handlers to the list for PART messages.
      *
      * @param callable $callback The callback to run if the pattern matches
+     * @param integer  $priority The priority of this event handler
      *
      * @return \Philip\Philip
      */
-    public function onPart($callback)
+    public function onPart($callback, $priority = 0)
     {
-        return $this->onServer('part', $callback);
+        return $this->onServer('part', $callback, $priority);
     }
 
     /**
      * Adds event handlers to the list for ERROR messages.
      *
      * @param callable $callback The callback to run if the pattern matches
+     * @param integer  $priority The priority of this event handler
      *
      * @return \Philip\Philip
      */
-    public function onError($callback)
+    public function onError($callback, $priority = 0)
     {
-        return $this->onServer('error', $callback);
+        return $this->onServer('error', $callback, $priority);
     }
 
     /**
      * Adds event handlers to the list for NOTICE messages.
      *
      * @param callable $callback The callback to run if the pattern matches
+     * @param integer  $priority The priority of this event handler
      *
      * @return \Philip\Philip
      */
-    public function onNotice($callback)
+    public function onNotice($callback, $priority = 0)
     {
-        return $this->onServer('notice', $callback);
+        return $this->onServer('notice', $callback, $priority);
     }
 
-    public function onServer($command, $callback)
+    /**
+     * Adds event handler to the list of server messages.
+     *
+     * @param string   $command  Server command to listen to
+     * @param callable $callback The callback to run when event occurs
+     * @param int      $priority The priority of this event handler
+     *
+     * @return $this
+     */
+    public function onServer($command, $callback, $priority = 0)
     {
         $handler = new EventListener(null, $callback);
-        $this->dispatcher->addListener('server.' . $command, array($handler, 'testAndExecute'));
+        $this->dispatcher->addListener('server.' . $command, array($handler, 'testAndExecute'), $priority);
 
         return $this;
     }
