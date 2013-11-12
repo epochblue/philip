@@ -157,10 +157,17 @@ $bot->onPrivateMessage()    // listens only to private messages
 $bot->onMessages()          // listens to both channel messages and private messages
 
 // Server Events
-$bot->onJoin()              // listens only for people joining channels
-$bot->onPart()              // listens only for people leaving channels
 $bot->onError()             // listens only for IRC ERROR messages
+$bot->onInvite()            // listens only for invites to channels
+$bot->onJoin()              // listens only for people joining channels
+$bot->onKick()              // listens only for people getting kicked from channels
+$bot->onMode()              // listens only for IRC MODE change messages
+$bot->onNick()              // listens only for people changing nick on channels
 $bot->onNotice()            // listens only for IRC NOTICE messages
+$bot->onPart()              // listens only for people leaving channels
+$bot->onPing()              // listens only for IRC PING messages
+$bot->onQuit()              // listens only for people leaving servers
+$bot->onTopic()             // listens only for channel topic changes
 ```
 
 The `<regex pattern>` is a standard PHP regular expression. If `null` is passed instead of a
