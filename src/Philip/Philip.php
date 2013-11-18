@@ -129,35 +129,9 @@ class Philip
     }
 
     /**
-     * Adds event handlers to the list for JOIN messages.
-     *
-     * @param callable $callback The callback to run if the pattern matches
-     * @param integer  $priority The priority of this event handler
-     *
-     * @return \Philip\Philip
-     */
-    public function onJoin($callback, $priority = 0)
-    {
-        return $this->onServer('join', $callback, $priority);
-    }
-
-    /**
-     * Adds event handlers to the list for PART messages.
-     *
-     * @param callable $callback The callback to run if the pattern matches
-     * @param integer  $priority The priority of this event handler
-     *
-     * @return \Philip\Philip
-     */
-    public function onPart($callback, $priority = 0)
-    {
-        return $this->onServer('part', $callback, $priority);
-    }
-
-    /**
      * Adds event handlers to the list for ERROR messages.
      *
-     * @param callable $callback The callback to run if the pattern matches
+     * @param callable $callback The callback to run when event occurs
      * @param integer  $priority The priority of this event handler
      *
      * @return \Philip\Philip
@@ -168,9 +142,74 @@ class Philip
     }
 
     /**
+     * Adds event handlers to the list for INVITE messages.
+     *
+     * @param callable $callback The callback to run  when event occurs
+     * @param integer  $priority The priority of this event handler
+     *
+     * @return \Philip\Philip
+     */
+    public function onInvite($callback, $priority = 0)
+    {
+        return $this->onServer('invite', $callback, $priority);
+    }
+
+    /**
+     * Adds event handlers to the list for JOIN messages.
+     *
+     * @param callable $callback The callback to run when event occurs
+     * @param integer  $priority The priority of this event handler
+     *
+     * @return \Philip\Philip
+     */
+    public function onJoin($callback, $priority = 0)
+    {
+        return $this->onServer('join', $callback, $priority);
+    }
+
+    /**
+     * Adds event handlers to the list for KICK messages.
+     *
+     * @param callable $callback The callback to run when event occurs
+     * @param integer  $priority The priority of this event handler
+     *
+     * @return \Philip\Philip
+     */
+    public function onKick($callback, $priority = 0)
+    {
+        return $this->onServer('kick', $callback, $priority);
+    }
+
+    /**
+     * Adds event handlers to the list for MODE messages.
+     *
+     * @param callable $callback The callback to run when event occurs
+     * @param integer  $priority The priority of this event handler
+     *
+     * @return \Philip\Philip
+     */
+    public function onMode($callback, $priority = 0)
+    {
+        return $this->onServer('mode', $callback, $priority);
+    }
+
+    /**
+     * Adds event handlers to the list for NICK messages.
+     *
+     * @param callable $callback The callback to run when event occurs
+     * @param integer  $priority The priority of this event handler
+     *
+     * @return \Philip\Philip
+     */
+    public function onNick($callback, $priority = 0)
+    {
+        return $this->onServer('nick', $callback, $priority);
+    }
+
+    /**
      * Adds event handlers to the list for NOTICE messages.
      *
-     * @param callable $callback The callback to run if the pattern matches
+     * @param callable $callback The callback to run when event occurs
      * @param integer  $priority The priority of this event handler
      *
      * @return \Philip\Philip
@@ -178,6 +217,58 @@ class Philip
     public function onNotice($callback, $priority = 0)
     {
         return $this->onServer('notice', $callback, $priority);
+    }
+
+    /**
+     * Adds event handlers to the list for PART messages.
+     *
+     * @param callable $callback The callback to run when event occurs
+     * @param integer  $priority The priority of this event handler
+     *
+     * @return \Philip\Philip
+     */
+    public function onPart($callback, $priority = 0)
+    {
+        return $this->onServer('part', $callback, $priority);
+    }
+
+    /**
+     * Adds event handlers to the list for PING messages.
+     *
+     * @param callable $callback The callback to run when event occurs
+     * @param integer  $priority The priority of this event handler
+     *
+     * @return \Philip\Philip
+     */
+    public function onPing($callback, $priority = 0)
+    {
+        return $this->onServer('ping', $callback, $priority);
+    }
+
+    /**
+     * Adds event handlers to the list for QUIT messages.
+     *
+     * @param callable $callback The callback to run when event occurs
+     * @param integer  $priority The priority of this event handler
+     *
+     * @return \Philip\Philip
+     */
+    public function onQuit($callback, $priority = 0)
+    {
+        return $this->onServer('quit', $callback, $priority);
+    }
+
+    /**
+     * Adds event handlers to the list for TOPIC messages.
+     *
+     * @param callable $callback The callback to run when event occurs
+     * @param integer  $priority The priority of this event handler
+     *
+     * @return \Philip\Philip
+     */
+    public function onTopic($callback, $priority = 0)
+    {
+        return $this->onServer('topic', $callback, $priority);
     }
 
     /**
@@ -526,7 +617,7 @@ class Philip
         $log = $this->log;
 
         // When the server PINGs us, just respond with PONG and the server's host
-        $this->onServer('ping', function(Event $event) {
+        $this->onPing(function(Event $event) {
             $event->addResponse(Response::pong($event->getRequest()->getMessage()));
         });
 
