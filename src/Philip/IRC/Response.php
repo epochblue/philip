@@ -37,76 +37,11 @@ class Response
     }
 
     /**
-     * Creates a PONG response.
-     *
-     * @param  string   $host The host string to send back
-     * @return string An IRC response message
-     */
-    public static function pong($host)
-    {
-        return sprintf('%s :%s', 'PONG', $host);
-    }
-
-    /**
-     * Creates a QUIT response.
-     *
-     * @param  string   $msg The quitting message
-     * @return string An IRC response message
-     */
-    public static function quit($msg)
-    {
-        return sprintf('%s :%s', 'QUIT', $msg);
-    }
-
-    /**
-     * Creates a JOIN response.
-     *
-     * @param  string   $channels The channels to join
-     * @return string An IRC response message
-     */
-    public static function join($channels)
-    {
-        return sprintf('%s %s', 'JOIN', $channels);
-    }
-
-    /**
-     * Creates a PART response.
-     *
-     * @param  string   $channels The channels to leave
-     * @return string An IRC response message
-     */
-    public static function leave($channels)
-    {
-        return sprintf('%s %s', 'PART', $channels);
-    }
-
-    /**
-     * Creates a PRIVMSG response.
-     *
-     * @param  string   $who  The channel/nick to send this msg to
-     * @param  string   $what The messages to send
-     * @return string An IRC response message
-     */
-    public static function msg($who, $msg)
-    {
-        return sprintf('%s %s :%s', 'PRIVMSG', $who, $msg);
-    }
-
-    /**
-     * Creates a NOTICE response.
-     *
-     * @param  string   $channel The channel to send the notice to.
-     * @return string An IRC response message
-     */
-    public static function notice($channel, $msg)
-    {
-        return sprintf('%s %s :%s', 'NOTICE', $channel, $msg);
-    }
-
-    /**
      * Creates a ACTION response.
      *
-     * @param  string   $channel The channel to send the action to.
+     * @param string $who The channel to send the action to.
+     * @param string $msg The message to send
+     *
      * @return string An IRC response message
      */
     public static function action($who, $msg)
@@ -123,21 +58,130 @@ class Response
     }
 
     /**
-     * Creates a USER response.
+     * Creates a PRIVMSG response.
      *
-     * @param  string   $username The bot's username
-     * @param  string   $realname The bot's "real name"
+     * @param string $who     The nick to send invite to
+     * @param string $channel The channel to invite nick to
+     *
      * @return string An IRC response message
      */
-    public static function user($username, $realname)
+    public static function invite($who, $channel)
     {
-        return sprintf('%s %s %s %s :%s', 'USER', $username, '8', '*', $realname);
+        return sprintf('%s %s %s', 'INVITE', $who, $channel);
+    }
+
+    /**
+     * Creates a JOIN response.
+     *
+     * @param string $channels The channels to join
+     *
+     * @return string An IRC response message
+     */
+    public static function join($channels)
+    {
+        return sprintf('%s %s', 'JOIN', $channels);
+    }
+
+    /**
+     * Creates a KICK response.
+     *
+     * @param string $who     The nick to kick
+     * @param string $channel The channel to kick nick from
+     * @param string $reason  Message with the reason
+     *
+     * @return string An IRC response message
+     */
+    public static function kick($who, $channel, $reason = '')
+    {
+        return sprintf('%s %s %s :%s', 'KICK', $channel, $who, $reason);
+    }
+
+    /**
+     * Creates a PART response.
+     *
+     * This function is deprecated, on IRC you part a channel, not leave.
+     * This leave function is now an alias of the part() function and will
+     * remain here for backwards compatibility.
+     *
+     * @param string $channels The channels to leave
+     *
+     * @return string An IRC response message
+     *
+     * @deprecated
+     */
+    public static function leave($channels)
+    {
+        return self::part($channels);
+    }
+
+    /**
+     * @param string $channel The channel change to mode for
+     * @param string $mode    The mode to set
+     * @param string $args    Extra arguments (e.g. nickname or other mode options)
+     *
+     * @return string An IRC response message
+     */
+    public static function mode($channel, $mode, $args = '')
+    {
+        return sprintf('%s %s %s %s', 'MODE', $channel, $mode, $args);
+    }
+
+    /**
+     * Creates a PRIVMSG response.
+     *
+     * @param string $who The channel/nick to send this msg to
+     * @param string $msg The message to send
+     *
+     * @return string An IRC response message
+     */
+    public static function msg($who, $msg)
+    {
+        return sprintf('%s %s :%s', 'PRIVMSG', $who, $msg);
+    }
+
+    /**
+     * Creates a NICK response.
+     *
+     * @param string $nick The nickname to set
+     *
+     * @return string An IRC response message
+     */
+    public static function nick($nick)
+    {
+        return sprintf('%s :%s', 'NICK', $nick);
+    }
+
+    /**
+     * Creates a NOTICE response.
+     *
+     * @param string $channel The channel to send the notice to.
+     * @param string $msg     The message to send
+     *
+     * @return string An IRC response message
+     */
+    public static function notice($channel, $msg)
+    {
+        return sprintf('%s %s :%s', 'NOTICE', $channel, $msg);
+    }
+
+    /**
+     * Creates a PART response.
+     *
+     * @param string $channels The channels to leave
+     *
+     * @return string An IRC response message
+     */
+    public static function part($channels)
+    {
+        return sprintf('%s %s', 'PART', $channels);
     }
 
     /**
      * Creates a PASS response.
      *
      * @param string $password The user's password
+     *
+     * @return string An IRC response message
      */
     public static function pass($password)
     {
@@ -145,13 +189,52 @@ class Response
     }
 
     /**
-     * Creates a NICK response.
+     * Creates a PONG response.
      *
-     * @param  string   $nick The nickname to set
+     * @param string $host The host string to send back
+     *
      * @return string An IRC response message
      */
-    public static function nick($nick)
+    public static function pong($host)
     {
-        return sprintf('%s :%s', 'NICK', $nick);
+        return sprintf('%s :%s', 'PONG', $host);
+    }
+
+    /**
+     * Creates a QUIT response.
+     *
+     * @param string $msg The quitting message
+     *
+     * @return string An IRC response message
+     */
+    public static function quit($msg)
+    {
+        return sprintf('%s :%s', 'QUIT', $msg);
+    }
+
+    /**
+     * Creates a TOPIC response.
+     *
+     * @param string $channel The channel to set the topic
+     * @param string $topic   The topic to set
+     *
+     * @return string An IRC response message
+     */
+    public static function topic($channel, $topic)
+    {
+        return sprintf('%s %s :%s', 'TOPIC', $channel, $topic);
+    }
+
+    /**
+     * Creates a USER response.
+     *
+     * @param string $username The bot's username
+     * @param string $realname The bot's "real name"
+     *
+     * @return string An IRC response message
+     */
+    public static function user($username, $realname)
+    {
+        return sprintf('%s %s %s %s :%s', 'USER', $username, '8', '*', $realname);
     }
 }
